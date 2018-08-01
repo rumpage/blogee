@@ -8,6 +8,10 @@ jobs:
     docker:
       - image: circleci/php:7.1.5-browsers
 
+    branches:
+      only:
+        - master
+
     steps:
       - checkout
 
