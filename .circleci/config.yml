@@ -13,16 +13,16 @@ jobs:
 
       - add_ssh_keys:
           fingerprints:
-            - "xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx"
+            - "7d:1b:68:f5:b5:b7:76:6c:11:2a:2c:66:70:61:9e:2e"
 
       - run:
           name: Start ssh-keyscan
           command: |
-            ssh-keyscan ${HOST_NAME} >> ~/.ssh/known_hosts
+            ssh-keyscan -p 10022 ${HOST_NAME} >> ~/.ssh/known_hosts
 
       - deploy:
           name: Start master deploy
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                rsync -av --delete --exclude='.git' --exclude='.circleci' ./ ${USER_NAME}@${HOST_NAME}:/var/www/html/
+                rsync -av --delete --rsh="ssh -p 10022" --exclude='.git' --exclude='.circleci' ./ ${USER_NAME}@${HOST_NAME}:~/blogee.info/public_html/blogee
             fi
