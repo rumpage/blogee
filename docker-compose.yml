@@ -1,0 +1,23 @@
+version: "2"
+services:
+    wordpress:
+        image: wordpress:4.9-php7.2-apache
+        ports:
+            - "8080:80"
+        depends_on:
+            - db
+        environment:
+            WORDPRESS_DB_HOST: "db:3306"
+        env_file: .env
+        volumes:
+            - ./:/var/www/html/blogee/
+    db:
+        image: mysql:5.7
+        env_file: .env
+        volumes:
+            - db-data:/var/lib/mysql
+            - ./db-data:/docker-entrypoint-initdb.d
+
+volumes:
+    db-data:
+        driver: local
