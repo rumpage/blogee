@@ -425,6 +425,12 @@ function feather_magazine_megamenu_parent_element( $selector ) {
 }
 add_filter( 'wpmm_container_selector', 'feather_magazine_megamenu_parent_element' );
 
+
+
+// アイキャッチ画像の有効化
+ 
+add_theme_support('post-thumbnails');
+
 /**
  * Post Layout for Archives
  */

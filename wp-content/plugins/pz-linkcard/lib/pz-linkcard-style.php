@@ -39,13 +39,55 @@
 				switch ($this->options['info-position']) {
 				case '1':
 					$file_text = str_replace('/*COLOR-INFO*/',		'color: #fff;', $file_text );
+					$file_text = str_replace('/*COLOR-ADDED*/',		'color: #fff;', $file_text );
 				}
 				$file_text = str_replace('/*THUMBNAIL_POSITION*/',	'float: left;', $file_text );
+				break;
+			case 'smp': // Hatena Blogcard
+				$file_text = str_replace('/*BORDER*/',			'border: none;', $file_text );
+				$file_text = str_replace('/*NONE-INFO*/',		'display: none !important;', $file_text );
+				$file_text = str_replace('/*NONE-EXCERPT*/',	'display: none !important;', $file_text );
 				break;
 			case 'hbc': // Hatena Blogcard
 				$file_text = str_replace('/*BORDER*/',			'border: 1px solid rgba(0,0,0,0.1);', $file_text );
 				$file_text = str_replace('/*RADIUS*/',			'border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px;', $file_text );
 				$file_text = str_replace('/*SHADOW*/',			'box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);', $file_text );
+				break;
+			case 'JIN': // Headline
+				$file_text = str_replace('/*MARGIN-TOP*/',		'margin-top: 24px;', $file_text );
+				$file_text = str_replace('/*MARGIN-RIGHT*/',	'margin-right: auto;', $file_text );
+				$file_text = str_replace('/*MARGIN-BOTTOM*/',	'margin-bottom: 30px;', $file_text );
+				$file_text = str_replace('/*MARGIN-LEFT*/',		'margin-left: auto;', $file_text );
+				$file_text = str_replace('/*CARD-TOP*/',		'margin-top: 24px;', $file_text );
+				$file_text = str_replace('/*CARD-RIGHT*/',		'margin-right: 20px;', $file_text );
+				$file_text = str_replace('/*CARD-BOTTOM*/',		'margin-bottom: 20px;', $file_text );
+				$file_text = str_replace('/*CARD-LEFT*/',		'margin-left: 20px;', $file_text );
+				$file_text = str_replace('/*WIDTH*/',			'max-width: 96%;', $file_text );
+				$file_text = str_replace('/*RADIUS*/',			'border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px;', $file_text );
+				$file_text = str_replace('/*LINKCARD-WRAP-MARGIN*/',	'margin: 0 auto;', $file_text );
+				$file_text = str_replace('/*THUMBNAIL-WIDTH*/',			'max-width: 150px;', $file_text );
+				$file_text = str_replace('/*THUMBNAIL-HEIGHT*/',		'height: 108px; overflow: hidden;', $file_text );
+				$file_text = str_replace('/*THUMBNAIL-IMG-WIDTH*/',		'width: 150px;', $file_text );
+				$file_text = str_replace('/*OPACITY*/',			'opacity: 0.8;', $file_text );
+				$file_text = str_replace('/*OPTION*/',			'.linkcard p { display: none; }', $file_text );
+				$file_text = str_replace('/*COLOR-ADDED*/',		'color: #fff;', $file_text );
+				$file_text = str_replace('/*SIZE-ADDED*/',		'font-size: 12px;', $file_text );
+				$file_text = str_replace('/*HEIGHT-ADDED*/',	'line-height: 30px;', $file_text );
+				$added_height	=	intval(preg_replace('/[^0-9]/', '', isset($this->options['height-added'] ) ? $this->options['height-added']  : $this->defaults['height-added']  ) );
+				$heading_height	=	intval( $added_height / 2 );
+				$heading_padding =	intval( $added_height / 4 );
+				$file_text		=	str_replace('/*HEADING*/',	'position: absolute; top: -15px; left: 20px; padding: 0 10px; background-color: '.$this->options['border-color'].'; border-radius: 2px;', $file_text );
+				if (isset($this->options['thumbnail-resize']) && $this->options['thumbnail-resize'] == '1') {
+					$size_title			=	intval(preg_replace('/[^0-9]/', '', isset($this->options['size-title']) ? $this->options['size-title'] : $this->defaults['size-title'] ) );
+					$size_excerpt		=	intval(preg_replace('/[^0-9]/', '', isset($this->options['size-excerpt']) ? $this->options['size-excerpt'] : $this->defaults['size-excerpt'] ) );
+					$height_title		=	intval(preg_replace('/[^0-9]/', '', isset($this->options['height-title']) ? $this->options['height-title'] : $this->defaults['height-title'] ) );
+					$height_excerpt		=	intval(preg_replace('/[^0-9]/', '', isset($this->options['height-excerpt']) ? $this->options['height-excerpt'] : $this->defaults['height-excerpt'] ) );
+					$thumbnail_width	=	150;
+					$file_text = str_replace('/*RESIZE*/',
+						'@media screen and (max-width: 767px)  {'.PHP_EOL.' .lkc-internal-wrap { max-width: 100% }'.PHP_EOL.' .lkc-external-wrap { max-width: 100% }'.PHP_EOL.' .lkc-this-wrap { max-width: 100% }'.PHP_EOL.' .lkc-title { font-size: '.intval($size_title * 0.9).'px; line-height: '.intval($height_title * 0.9).'px; }'.PHP_EOL.' .lkc-excerpt { font-size: '.intval($size_excerpt * 0.95).'px; }'.PHP_EOL.' .lkc-thumbnail { max-width: '.intval($thumbnail_width * 0.9).'px; }'.PHP_EOL.' .lkc-thumbnail-img { max-width: '.intval($thumbnail_width * 0.9).'px; }'.PHP_EOL.'}'.PHP_EOL.
+						'@media screen and (max-width: 512px)  {'.PHP_EOL.' .lkc-internal-wrap { max-width: 100% }'.PHP_EOL.' .lkc-external-wrap { max-width: 100% }'.PHP_EOL.' .lkc-this-wrap { max-width: 100% }'.PHP_EOL.' .lkc-title { font-size: '.intval($size_title * 0.8).'px; line-height: '.intval($height_title * 0.8).'px; }'.PHP_EOL.' .lkc-excerpt { font-size: '.intval($size_excerpt * 0.8).'px; }'.PHP_EOL.' .lkc-thumbnail { max-width: '.intval($thumbnail_width * 0.7).'px; }'.PHP_EOL.' .lkc-thumbnail-img { max-width: '.intval($thumbnail_width * 0.7).'px; }'.PHP_EOL.'}'.PHP_EOL.
+						'@media screen and (max-width: 320px)  {'.PHP_EOL.' .lkc-internal-wrap { max-width: 100% }'.PHP_EOL.' .lkc-external-wrap { max-width: 100% }'.PHP_EOL.' .lkc-this-wrap { max-width: 100% }'.PHP_EOL.' .lkc-title { font-size: '.intval($size_title * 0.7).'px; line-height: '.intval($height_title * 0.7).'px; }'.PHP_EOL.' .lkc-excerpt { font-size: '.intval($size_excerpt * 0.6).'px; }'.PHP_EOL.' .lkc-thumbnail { max-width: '.intval($thumbnail_width * 0.5).'px; }'.PHP_EOL.' .lkc-thumbnail-img { max-width: '.intval($thumbnail_width * 0.5).'px; }'.PHP_EOL.'}', $file_text );
+				}
 				break;
 			case 'sqr': // Square
 				$file_text = str_replace('/*HEIGHT*/',					'height: 337px;', $file_text );
@@ -77,7 +119,7 @@
 				$file_text = str_replace('/*SHADOW*/',			'box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);', $file_text );
 				break;
 			case 'slt': // Slanting
-				$file_text = str_replace('/*WRAP*/',			'transform:skew(-10deg) rotate(1deg);-webkit-transform:	skew(-10deg) rotate(1deg);-moz-transform:skew(-10deg) rotate(1deg);', $file_text );
+				$file_text = str_replace('/*WRAP*/',			'transform:skew(-10deg) rotate(1deg);-webkit-transform: skew(-10deg) rotate(1deg);-moz-transform:skew(-10deg) rotate(1deg);', $file_text );
 				$file_text = str_replace('/*MARGIN-LEFT*/',		'margin-left: 12px;', $file_text );
 				$file_text = str_replace('/*MARGIN-RIGHT*/',	'margin-right: 30px;', $file_text );
 				break;
@@ -109,7 +151,7 @@
 				break;
 			case 'pin': // Pushpin
 				$file_text = str_replace('/*WRAP*/', 			'position: relative;', $file_text );
-				$file_text = str_replace('/*WRAP-AFTER*/',		'content: ""; display: block; position: absolute; background-image: url("'.$this->plugin_dir_url.'img/pin.png"); background-repeat: no-repeat; background-position: center; left: 0px; top: -40px; width: 100%; height: 100px; z-index: 2;', $file_text );
+				$file_text = str_replace('/*WRAP-AFTER*/',		'content: ""; display: block; position: absolute; background-image: url("'.$this->plugin_dir_url.'img/pin.png"); background-repeat: no-repeat; background-position: center; left: 47%; top: -16px; width: 40px; height: 40px; z-index: 1;', $file_text );
 				break;
 			case 'inN': // Neutral
 				$file_text = str_replace('/*BORDER*/',			'border: 4px solid #59fbea;', $file_text );
@@ -174,6 +216,13 @@
 			$file_text = str_replace('/*COLOR-URL*/',		'color: '.$this->options['color-url'].';', $file_text );
 			$file_text = str_replace('/*COLOR-EXCERPT*/',	'color: '.$this->options['color-excerpt'].';', $file_text );
 			$file_text = str_replace('/*COLOR-INFO*/',		'color: '.$this->options['color-info'].';', $file_text );
+			if (!$this->options['color-added']) {
+				$this->options['color-added']	=	$this->options['color-info'];
+				$this->options['size-added']	=	$this->options['size-info'];
+				$this->options['height-added']	=	$this->options['height-info'];
+				$this->options['outline-added']	=	$this->options['outline-info'];
+			}
+			$file_text = str_replace('/*COLOR-ADDED*/',		'color: '.$this->options['color-added'].';', $file_text );
 			$file_text = str_replace('/*COLOR-MORE*/',		'color: '.$this->options['color-more'].';', $file_text );
 			$file_text = str_replace('/*COLOR-PLUGIN*/',	'color: '.$this->options['color-plugin'].';', $file_text );
 
@@ -182,6 +231,7 @@
 			$file_text = str_replace('/*SIZE-URL*/',		'font-size: '.$this->options['size-url'].';', $file_text );
 			$file_text = str_replace('/*SIZE-EXCERPT*/',	'font-size: '.$this->options['size-excerpt'].';', $file_text );
 			$file_text = str_replace('/*SIZE-INFO*/',		'font-size: '.$this->options['size-info'].';', $file_text );
+			$file_text = str_replace('/*SIZE-ADDED*/',		'font-size: '.$this->options['size-added'].';', $file_text );
 			$file_text = str_replace('/*SIZE-MORE*/',		'font-size: '.$this->options['size-more'].';', $file_text );
 			$file_text = str_replace('/*SIZE-PLUGIN*/',		'font-size: '.$this->options['size-plugin'].';', $file_text );
 
@@ -190,6 +240,7 @@
 			$file_text = str_replace('/*HEIGHT-URL*/',		'line-height: '.$this->options['height-url'].';', $file_text );
 			$file_text = str_replace('/*HEIGHT-EXCERPT*/',	'line-height: '.$this->options['height-excerpt'].';', $file_text );
 			$file_text = str_replace('/*HEIGHT-INFO*/',		'line-height: '.$this->options['height-info'].';', $file_text );
+			$file_text = str_replace('/*HEIGHT-ADDED*/',	'line-height: '.$this->options['height-added'].';', $file_text );
 			$file_text = str_replace('/*HEIGHT-MORE*/',		'line-height: '.$this->options['height-more'].';', $file_text );
 			$file_text = str_replace('/*HEIGHT-PLUGIN*/',	'line-height: '.$this->options['height-plugin'].';', $file_text );
 
@@ -205,6 +256,9 @@
 			}
 			if (isset($this->options['outline-info']) && $this->options['outline-info'] == '1') {
 				$file_text = str_replace('/*OUTCOLOR-INFO*/',	'text-shadow: 0 -1px '.$this->options['outline-color-info'].', 1px -1px '.$this->options['outline-color-info'].', 1px 0 '.$this->options['outline-color-info'].', 1px 1px '.$this->options['outline-color-info'].', 0 1px '.$this->options['outline-color-info'].', -1px 1px '.$this->options['outline-color-info'].', -1px 0 '.$this->options['outline-color-info'].', -1px -1px '.$this->options['outline-color-info'].';', $file_text );
+			}
+			if (isset($this->options['outline-added']) && $this->options['outline-added'] == '1') {
+				$file_text = str_replace('/*OUTCOLOR-ADDED*/',	'text-shadow: 0 -1px '.$this->options['outline-color-added'].', 1px -1px '.$this->options['outline-color-added'].', 1px 0 '.$this->options['outline-color-added'].', 1px 1px '.$this->options['outline-color-added'].', 0 1px '.$this->options['outline-color-added'].', -1px 1px '.$this->options['outline-color-added'].', -1px 0 '.$this->options['outline-color-added'].', -1px -1px '.$this->options['outline-color-added'].';', $file_text );
 			}
 			if (isset($this->options['outline-more']) && $this->options['outline-more'] == '1') {
 				$file_text = str_replace('/*OUTCOLOR-MORE*/',	'text-shadow: 0 -1px '.$this->options['outline-color-more'].', 1px -1px '.$this->options['outline-color-more'].', 1px 0 '.$this->options['outline-color-more'].', 1px 1px '.$this->options['outline-color-more'].', 0 1px '.$this->options['outline-color-more'].', -1px 1px '.$this->options['outline-color-more'].', -1px 0 '.$this->options['outline-color-more'].', -1px -1px '.$this->options['outline-color-more'].';', $file_text );
@@ -255,7 +309,7 @@
 			// img のスタイルを強制リセット
 			if (isset($this->options['style-reset-img'])) {
 				$file_text = str_replace('/*RESET-IMG*/',		'margin: 0 !important; padding: 0; border: none;', $file_text );
-				$file_text = str_replace('/*STATIC*/',			'position:				static !important;', $file_text );
+				$file_text = str_replace('/*STATIC*/',			'position: static !important;', $file_text );
 				$file_text = str_replace('/*IMPORTANT*/',		'!important', $file_text );
 			} else {
 				$file_text = str_replace('/*IMPORTANT*/',		'', $file_text );
@@ -306,13 +360,35 @@
 				$file_text = str_replace('/*HATENA-WRAP-MARGIN*/',		'margin: 0;', $file_text );
 			}
 
-			// 角まる指定あり	
-			if (isset($this->options['radius']) && $this->options['radius'] == '1') {
+			// 角まる指定あり
+			switch ($this->options['radius']) {
+			case null:
+				$file_text = str_replace('/*RADIUS*/',					'', $file_text );
+				$file_text = str_replace('/*THUMBNAIL-RADIUS*/',		'', $file_text );
+				break;
+			case '2':
+				$file_text = str_replace('/*RADIUS*/',					'border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px;', $file_text );
+				$file_text = str_replace('/*THUMBNAIL-RADIUS*/',		'border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px;', $file_text );
+				break;
+			case '1':
 				$file_text = str_replace('/*RADIUS*/',					'border-radius: 8px; -webkit-border-radius: 8px; -moz-border-radius: 8px;', $file_text );
 				$file_text = str_replace('/*THUMBNAIL-RADIUS*/',		'border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px;', $file_text );
+				break;
+			case '3':
+				$file_text = str_replace('/*RADIUS*/',					'border-radius: 16px; -webkit-border-radius: 16px; -moz-border-radius: 16px;', $file_text );
+				$file_text = str_replace('/*THUMBNAIL-RADIUS*/',		'border-radius: 8px; -webkit-border-radius: 8px; -moz-border-radius: 8px;', $file_text );
+				break;
+			case '4':
+				$file_text = str_replace('/*RADIUS*/',					'border-radius: 32px; -webkit-border-radius: 32px; -moz-border-radius: 32px;', $file_text );
+				$file_text = str_replace('/*THUMBNAIL-RADIUS*/',		'border-radius: 12px; -webkit-border-radius: 12px; -moz-border-radius: 12px;', $file_text );
+				break;
+			case '5':
+				$file_text = str_replace('/*RADIUS*/',					'border-radius: 64px; -webkit-border-radius: 64px; -moz-border-radius: 64px;', $file_text );
+				$file_text = str_replace('/*THUMBNAIL-RADIUS*/',		'border-radius: 16px; -webkit-border-radius: 16px; -moz-border-radius: 16px;', $file_text );
+				break;
 			}
 
-			// 影あり	
+			// 影あり
 			if (isset($this->options['shadow']) && $this->options['shadow'] == '1') {
 				if (isset($this->options['shadow-inset']) && $this->options['shadow-inset'] == '1') {
 					$file_text = str_replace('/*SHADOW*/',		'box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.5) , 0 0 16px rgba(0, 0, 0, 0.3) inset;', $file_text );
@@ -323,6 +399,11 @@
 				if (isset($this->options['shadow-inset']) && $this->options['shadow-inset'] == '1') {
 					$file_text = str_replace('/*SHADOW*/',		'box-shadow: 0 0 16px rgba(0, 0, 0, 0.5) inset;', $file_text );
 				}
+			}
+
+			// 薄める指定あり
+			if (isset($this->options['opacity']) && $this->options['opacity'] == '1') {
+				$file_text = str_replace('/*OPACITY*/',			'opacity: 0.8;', $file_text );
 			}
 
 			// サムネイルの位置とサイズ
@@ -367,9 +448,9 @@
 				$height_excerpt		=	intval(preg_replace('/[^0-9]/', '', isset($this->options['height-excerpt']) ? $this->options['height-excerpt'] : $this->defaults['height-excerpt'] ) );
 				$thumbnail_width	=	intval(preg_replace('/[^0-9]/', '', isset($this->options['thumbnail-width']) ? $this->options['thumbnail-width'] : $this->defaults['thumbnail-width'] ) );
 				$file_text = str_replace('/*RESIZE*/',
-					'@media screen and (max-width: 600px)  {'.PHP_EOL.'.lkc-title {'.PHP_EOL.'font-size: '.intval($size_title * 0.9).'px;'.PHP_EOL.'line-height: '.intval($height_title * 0.9).'px;'.PHP_EOL.'}'.PHP_EOL.'.lkc-excerpt {'.PHP_EOL.'font-size: '.intval($size_excerpt * 0.95).'px;'.PHP_EOL.'}'.PHP_EOL.'.lkc-thumbnail {'.PHP_EOL.'max-width: '.intval($thumbnail_width * 0.9).'px;'.PHP_EOL.'}'.PHP_EOL.'.lkc-thumbnail-img {'.PHP_EOL.'max-width: '.intval($thumbnail_width * 0.9).'px;'.PHP_EOL.'}'.PHP_EOL.'}'.PHP_EOL.
-					'@media screen and (max-width: 480px)  {'.PHP_EOL.'.lkc-title {'.PHP_EOL.'font-size: '.intval($size_title * 0.8).'px;'.PHP_EOL.'line-height: '.intval($height_title * 0.8).'px;'.PHP_EOL.'}'.PHP_EOL.'.lkc-excerpt {'.PHP_EOL.'font-size: '.intval($size_excerpt * 0.8).'px;'.PHP_EOL.'}'.PHP_EOL.'.lkc-thumbnail {'.PHP_EOL.'max-width: '.intval($thumbnail_width * 0.7).'px;'.PHP_EOL.'}'.PHP_EOL.'.lkc-thumbnail-img {'.PHP_EOL.'max-width: '.intval($thumbnail_width * 0.7).'px;'.PHP_EOL.'}'.PHP_EOL.'}'.PHP_EOL.
-					'@media screen and (max-width: 320px)  {'.PHP_EOL.'.lkc-title {'.PHP_EOL.'font-size: '.intval($size_title * 0.7).'px;'.PHP_EOL.'line-height: '.intval($height_title * 0.7).'px;'.PHP_EOL.'}'.PHP_EOL.'.lkc-excerpt {'.PHP_EOL.'font-size: '.intval($size_excerpt * 0.6).'px;'.PHP_EOL.'}'.PHP_EOL.'.lkc-thumbnail {'.PHP_EOL.'max-width: '.intval($thumbnail_width * 0.5).'px;'.PHP_EOL.'}'.PHP_EOL.'.lkc-thumbnail-img {'.PHP_EOL.'max-width: '.intval($thumbnail_width * 0.5).'px;'.PHP_EOL.'}'.PHP_EOL.'}', $file_text );
+					'@media screen and (max-width: 600px)  {'.PHP_EOL.' .lkc-title { font-size: '.intval($size_title * 0.9).'px; line-height: '.intval($height_title * 0.9).'px; }'.PHP_EOL.' .lkc-excerpt { font-size: '.intval($size_excerpt * 0.95).'px; }'.PHP_EOL.' .lkc-thumbnail { max-width: '.intval($thumbnail_width * 0.9).'px; }'.PHP_EOL.' .lkc-thumbnail-img { max-width: '.intval($thumbnail_width * 0.9).'px; }'.PHP_EOL.'}'.PHP_EOL.
+					'@media screen and (max-width: 480px)  {'.PHP_EOL.' .lkc-title { font-size: '.intval($size_title * 0.8).'px; line-height: '.intval($height_title * 0.8).'px; }'.PHP_EOL.' .lkc-excerpt { font-size: '.intval($size_excerpt * 0.8).'px; }'.PHP_EOL.' .lkc-thumbnail { max-width: '.intval($thumbnail_width * 0.7).'px; }'.PHP_EOL.' .lkc-thumbnail-img { max-width: '.intval($thumbnail_width * 0.7).'px; }'.PHP_EOL.'}'.PHP_EOL.
+					'@media screen and (max-width: 320px)  {'.PHP_EOL.' .lkc-title { font-size: '.intval($size_title * 0.7).'px; line-height: '.intval($height_title * 0.7).'px; }'.PHP_EOL.' .lkc-excerpt { font-size: '.intval($size_excerpt * 0.6).'px; }'.PHP_EOL.' .lkc-thumbnail { max-width: '.intval($thumbnail_width * 0.5).'px; }'.PHP_EOL.' .lkc-thumbnail-img { max-width: '.intval($thumbnail_width * 0.5).'px; }'.PHP_EOL.'}', $file_text );
 			}
 
 			// 横幅
@@ -446,12 +527,20 @@
 			if (isset($this->options['separator']) && $this->options['separator'] == '1') {
 				switch ($this->options['info-position']) {
 				case '1':
-					$file_text = str_replace('/*SEPARATOR*/',	'border-top: 1px solid '.$this->options['color-info'].';', $file_text );
+					$file_text	=	str_replace('/*SEPARATOR*/',	'border-top: 1px solid '.$this->options['color-info'].';', $file_text );
 					break;
 				case '2':
-					$file_text = str_replace('/*SEPARATOR*/',	'border-bottom: 1px solid '.$this->options['color-info'].';', $file_text );
+					$file_text	=	str_replace('/*SEPARATOR*/',	'border-bottom: 1px solid '.$this->options['color-info'].';', $file_text );
 					break;
 				}
+			}
+
+			// 付加情報
+			if (isset($this->options['heading']) && $this->options['heading'] == '1') {
+				$added_height	=	intval(preg_replace('/[^0-9]/', '', isset($this->options['height-added'] ) ? $this->options['height-added']  : $this->defaults['height-added']  ) );
+				$heading_height	=	intval( $added_height / 2 );
+				$heading_padding =	intval( $added_height / 4 );
+				$file_text		=	str_replace('/*HEADING*/',	'position: absolute; top: -'.$heading_height.'px; left: 20px; padding: 0 '.$heading_padding.'px; background-color: '.$this->options['border-color'].'; border-radius: 2px;', $file_text );
 			}
 
 			// 続きを読むボタン
@@ -468,6 +557,11 @@
 			case	'4':
 				$file_text = str_replace('/*STYLE-MORE*/',		'border: 1px solid #888; border-radius: 6px; text-align: center; padding: 4px; margin: 4px 0; background-color: #888;', $file_text );
 				break;
+			}
+
+			// アンカーの文字装飾
+			if (isset($this->options['flg-anker']) && $this->options['flg-anker'] == '1') {
+				$file_text = str_replace('/*ANKER*/',			'text-decoration: none !important;', $file_text );
 			}
 
 			// 追加CSS

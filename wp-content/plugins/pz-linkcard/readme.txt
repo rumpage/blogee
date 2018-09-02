@@ -2,7 +2,7 @@
 Contributors: poporon
 Tags: post, internal link, external link, blogcard, linkcard
 Requires at least: 4.3
-Tested up to: 4.9.7
+Tested up to: 4.9.8
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -163,19 +163,115 @@ A7.
 5. "Write shortcode and url"
 
 == Changelog ==
+Ver 2.1.8.1
+* フィルターの優先度を指定するように修正しました。
+  Modified: Fix to specify filter priority.
+* リンク切れチェックの周期が長くなるように修正しました。
+  Modified: Correction was made so that the link break check cycle becomes longer.
+* 編集画面に次回のリンク切れチェック日時を表示しました。
+  Modified: The next link break check date and time was displayed on the edit screen.
+
+Ver 2.1.8
+* 「かんたん書式設定」の「Pzカード 標準書式」を「Pzカード オリジナル」に名称変更しました。
+  Modified: Minor fixes.
+* 「かんたん書式設定」の「Pzカード 標準書式」を微調整しました。
+  Modified: Fine adjustment tiny format "Pz LinkCard Default".
+* 「かんたん書式設定」の「見出し」を微調整しました。
+  Modified: Fine adjustment tiny format "Header".
+* 「かんたん書式設定」の「シンプル」を「ノーマル（はてなブログカード風）」に名称変更しました。
+  Modified: Modified tiny format "Simple" to "Normal".
+* 「かんたん書式設定」に「シンプル」を追加しました。
+  Modified: Added tiny format "Simple".
+* 「かんたん書式設定」の「押しピン」を微調整しました。
+  Modified: Added tiny format "Pushpin".
+* 設定画面のサイト情報の位置に「タイトルの上側」を追加しました。
+  Added: Added setting to set Above the title.
+* 設定画面の「サイト情報」を「付加情報」に修正しました。
+  Fixed: Modified "Site information" to "Added information".
+* カード管理画面の並び順の表示が昇順になっていたのを修正しました。
+  Fixed: Fixed a bug.
+* ソーシャルカウントに「Pocket」を追加しました。
+  Added: Added Pocket social count.
+* アンカーテキストの装飾を無効にする設定を追加しました。
+  Added: Added setting to disable anchor text decoration.
+
+Ver2.1.7.1
+* 「かんたん書式設定」に「見出し」を追加しました。
+  Added: Tiny format 'Headline'.
+* スタイルシートを整理しました。
+  Modified: Minor fixes.
+
+Ver2.1.7
+* 外部サイト・内部サイト・同ページの判断方法を修正しました。
+  Modified: Change judgment method.
+* 外部リンクのみ変換する設定を追加しました。（Thanks @mocochat）
+  Added: Added 'Convert only external link'.
+* 文字コードを自動判断したときの結果を修正しました。
+  Modified: Minor fixes.
+
+Ver2.1.6.2
+* アンカーテキストのアンダーラインが表示されてしまうのを修正しました。
+  Fixed: Fixed a bug.
+
+Ver2.1.6.1
+* サイト情報を表示しないとき、ワーニングが出ていたのを修正しました。
+  Fixed: Fixed a bug.（Thanks @ryuji120912）
+
+Ver2.1.6
+* 設定画面にTwitterアカウントを表示しました。
+  Added: Added 'When in trouble'.
+* タイトル取得（正規表現）を修正しました。
+  Modified: Fixed title acquisition method.
+* アンカーテキストのアンダーラインを無しにしました。
+  Modified: Changed the text-decoration to "none".
+
+Ver2.1.5
+* 文字装飾を無しにしました。
+  Modified: Changed the text-decoration to "none".
+* 初期設定では「影を付けない」設定に変更しました。
+  Modified: Changed the initial setting to "Do not add shadows".
+* 初期設定では「角を丸めない」設定に変更しました。
+  Modified: Changed the initial setting to "Do not round".
+* 初期設定では外部サイトのサムネイルを「直接取得できない場合、WebAPIを利用する」に変更しました。
+  Modified: Changed the initial setting to "Use WebAPI ,If can not direct".
+* 角をまるめる設定にサイズを追加しました。
+  Modified： Square rounding has added some sizes.
+* カードの余白に「24px」を追加しました。
+  Modified: 24px was added to the card margin.
+* サムネイル取得WebAPIのHeartRail社の例をhttpsに変更しました。
+  Modified: More secure.
+* Facebookのシェア数取得APIをhttpsに変更しました。
+  Modified: More secure.
+* Twitterのツイート数取得APIをhttpsに変更しました。
+  Modified: More secure.
+* Tweet(s)をクリックしたときの動作をツイート検索に変更しました。
+  Modified: From registration to search at Twitter.
+* User(s)をクリックしたときの動作をはてなブックマーク数表示に変更しました。
+  Modified: From registration to search at Hatena.
+* サイト情報からサイト名称と付加情報を分けました。
+  Added: Add additional information.
+* 付加情報の文字設定を追加しました。
+  Added: Add character setting of additional information.
+* 付加情報を見出し表示にする設定を追加しました。（Thanks @hituji_1234）
+  Added: Added setting to set additional information as heading.
+
+Ver2.1.4.2
+* WordPress 4.9.8 での動作確認。
+  Compatible with WordPress 4.9.8.
+
 Ver2.1.4.1
 * URLの記述ミスに対応しました。
   Modified: Corresponded to URL mistake.
 
 Ver2.1.4
-* CHARSETを判断できないパターンがあったため修正しました。
+* CHARSETを判断できないパターンがあったため修正しました。（Thanks サイノア）
   Fixed: There was a pattern which can not judge CHARSET, so I fixed it.
 * カード管理で「すべて」を選んだときに内部リンクが表示されていたのを修正しました。
   Fixed: Fixed a bug in card management.
 
 Ver2.1.3.1
 * WordPress 4.9.6 での動作確認。
-  Compatible with WordPress 4.9.6
+  Compatible with WordPress 4.9.6.
 
 Ver2.1.3
 * サブメニューの横にリンク切れの件数を表示する設定を追加しました。（Thanks @Oncle1316）

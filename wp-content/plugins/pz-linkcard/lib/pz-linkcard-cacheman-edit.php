@@ -103,6 +103,7 @@
 					<?php _e('Tw', $this->text_domain) ?>:<input name="data[sns_twitter]" type="text" id="inputtext" value="<?php echo $data['sns_twitter']; ?>" size="5" readonly="readonly" />
 					<?php _e('fb', $this->text_domain) ?>:<input name="data[sns_facebook]" type="text" id="inputtext" value="<?php echo $data['sns_facebook']; ?>" size="5" readonly="readonly" />
 					<?php _e('B!', $this->text_domain) ?>:<input name="data[sns_hatena]" type="text" id="inputtext" value="<?php echo $data['sns_hatena']; ?>" size="5" readonly="readonly" />
+					<?php _e('Po', $this->text_domain) ?>:<input name="data[sns_pocket]" type="text" id="inputtext" value="<?php echo $data['sns_pocket']; ?>" size="5" readonly="readonly" />
 				</td>
 			</tr>
 			<tr>
@@ -110,8 +111,12 @@
 				<td><input name="data[uptime]" type="text" id="inputtext" value="<?php echo $data['uptime']; ?>" size="10" readonly="readonly" /><?php echo date('Y-m-d H:i:s', $data['uptime']); ?></td>
 			</tr>
 			<tr>
-				<th><?php _e('Next update', $this->text_domain) ?></th>
+				<th><?php _e('Next SNS', $this->text_domain) ?></th>
 				<td><input name="data[sns_nexttime]" type="text" id="inputtext" value="<?php echo $data['sns_nexttime']; ?>" size="10" readonly="readonly" /><?php echo date('Y-m-d H:i:s', $data['sns_nexttime']); ?></td>
+			</tr>
+			<tr>
+				<th><?php _e('Next alive', $this->text_domain) ?></th>
+				<td><input name="data[alive_nexttime]" type="text" id="inputtext" value="<?php echo $data['alive_nexttime']; ?>" size="10" readonly="readonly" /><?php echo date('Y-m-d H:i:s', $data['alive_nexttime']); ?></td>
 			</tr>
 			<tr>
 				<th><?php _e('Regist', $this->text_domain) ?></th>
@@ -119,7 +124,7 @@
 			</tr>
 			<tr>
 				<th></th>
-				<td><input name="update"   type="submit" class="button button-primary button-large" id="publish" value="<?php _e('Update', $this->text_domain) ?>" /> <input name="cancel" type="submit" class="button                button-large" id="publish" value="<?php _e('Cancel', $this->text_domain) ?>" /></td>
+				<td><input name="update"   type="submit" class="button button-primary button-large" id="publish" value="<?php _e('Update', $this->text_domain) ?>" /> <input name="cancel" type="submit" class="button button-large" id="publish" value="<?php _e('Cancel', $this->text_domain) ?>" /></td>
 			</tr>
 		</table>
 	</div>

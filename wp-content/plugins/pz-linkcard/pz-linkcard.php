@@ -3,7 +3,7 @@
 Plugin Name: Pz-LinkCard
 Plugin URI: http://poporon.poponet.jp/pz-linkcard
 Description: リンクをカード形式で表示します。
-Version: 2.1.4.1
+Version: 2.1.8.1
 Author: poporon
 Author URI: http://poporon.poponet.jp
 License: GPLv2 or later
@@ -37,6 +37,7 @@ class Pz_LinkCard {
 			'code4'				=>	null,
 			'auto-atag'			=>	null,
 			'auto-url'			=>	null,
+			'auto-external'		=>	null,
 			'trail-slash'		=>	'1',
 			'border-width'		=>	'1px',
 			'border-style'		=>	'solid',
@@ -52,9 +53,10 @@ class Pz_LinkCard {
 			'card-bottom'		=>	null,
 			'card-left'			=>	null,
 			'centering'			=>	null,
-			'radius'			=>	'1',
-			'shadow'			=>	'1',
+			'radius'			=>	null,
+			'shadow'			=>	null,
 			'shadow-inset'		=>	null,
+			'opacity'			=>	null,
 			'special-format'	=>	null,
 			'use-inline'		=>	null,
 			'use-sitename'		=>	'1',
@@ -70,24 +72,28 @@ class Pz_LinkCard {
 			'size-url'			=>	'10px',
 			'size-excerpt'		=>	'11px',
 			'size-info'			=>	'12px',
+			'size-added'		=>	'12px',
 			'size-more'			=>	'12px',
 			'size-plugin'		=>	'10px',
 			'height-title'		=>	'24px',
 			'height-url'		=>	'10px',
 			'height-excerpt'	=>	'17px',
 			'height-info'		=>	'12px',
+			'height-added'		=>	'12px',
 			'height-more'		=>	'40px',
 			'height-plugin'		=>	'10px',
 			'color-title'			=>	'#111111',
 			'color-url'				=>	'#4466ff',
 			'color-excerpt'			=>	'#333333',
 			'color-info'			=>	'#222222',
+			'color-added'			=>	'#222222',
 			'color-more'			=>	'#444444',
 			'color-plugin'			=>	'#888888',
 			'outline-color-title'	=>	'#ffffff',
 			'outline-color-url'		=>	'#ffffff',
 			'outline-color-excerpt'	=>	'#ffffff',
 			'outline-color-info'	=>	'#ffffff',
+			'outline-color-added'	=>	'#ffffff',
 			'outline-color-more'	=>	'#ffffff',
 			'outline-color-plugin'	=>	'#ffffff',
 			'ex-bgcolor'			=>	'#ffffff',
@@ -105,7 +111,7 @@ class Pz_LinkCard {
 			'th-info'			=>	null,
 			'in-target'			=>	null,
 			'ex-target'			=>	'2',
-			'ex-thumbnail'		=>	'3',
+			'ex-thumbnail'		=>	'13',
 			'in-thumbnail'		=>	'1',
 			'ex-favicon'		=>	'3',
 			'in-favicon'		=>	'3',
@@ -114,7 +120,7 @@ class Pz_LinkCard {
 			'thumbnail-position'=>	'2',
 			'thumbnail-width'	=>	'100px',
 			'thumbnail-height'	=>	'108px',
-			'thumbnail-shadow'	=>	'1',
+			'thumbnail-shadow'	=>	null,
 			'thumbnail-resize'	=>	'1',
 			'cache-time'		=>	31536000,
 			'user-agent'		=>	null,
@@ -127,6 +133,7 @@ class Pz_LinkCard {
 			'flg-ssl'			=>	'1',
 			'flg-amp-url'		=>	null,
 			'flg-idn'			=>	'1',
+			'flg-anker'			=>	'1',
 			'flg-unlink'		=>	'1',
 			'flg-get-pid'		=>	null,
 			'flg-subdir'		=>	'1',
@@ -145,6 +152,7 @@ class Pz_LinkCard {
 			'sns-tw'			=>	'1',
 			'sns-fb'			=>	'1',
 			'sns-hb'			=>	'1',
+			'sns-po'			=>	'1',
 			'link-all'			=>	'1',
 			'blockquote'		=>	null,
 			'nofollow'			=>	null,
@@ -155,7 +163,7 @@ class Pz_LinkCard {
 			'invalid-time'		=>	null,
 			'plugin-link'		=>	null,
 			'plugin-name'		=>	'Pz-LinkCard',
-			'plugin-version'	=>	'2.1.4.1',
+			'plugin-version'	=>	'2.1.8.1',
 			'plugin-url'		=>	'https://popozure.info/pz-linkcard',
 			'pz-hbc-options'	=>	null,
 			'debug-time'		=>	null
@@ -193,14 +201,14 @@ class Pz_LinkCard {
 		}
 		
 		// CSS URLが空だったら生成
-		if (!isset($this->options['css-url']) || $this->options['css-url'] == '') {
+		if (!$this->options['css-url']) {
 			$this->pz_SetStyle();
 		}
 		
 		// ショートコードの設定
-		if ($this->options['auto-atag'] <> '' || $this->options['auto-url'] <> '') {
-			add_filter		('the_content',									array($this, 'auto_replace') );		// 自動置き換え
-			add_shortcode	('pz-linkcard-auto-replace',					array($this, 'shortcode') );		// 自動置き換え専用ショートコード
+		if ($this->options['auto-atag'] || $this->options['auto-url']) {
+			add_filter		('the_content',					array($this, 'auto_replace'), 10 );	// 自動置き換え
+			add_shortcode	('pz-linkcard-auto-replace',	array($this, 'shortcode') );		// 自動置き換え専用ショートコード
 		}
 		if ($this->options['code1']) {
 			add_shortcode($this->options['code1'], array($this, 'shortcode'));
@@ -230,14 +238,14 @@ class Pz_LinkCard {
 			add_filter		('mce_external_plugins',						array($this, 'add_mce_plugin') );	// ビジュアルエディタ用ボタン
 			add_filter		('plugin_action_links_'.$this->plugin_basename,	array($this, 'action_links') );		// プラグイン画面
 			
-			if (!isset($this->options['style']) || $this->options['style'] == '') {
+			if (!$this->options['style']) {
 				if (!isset($this->options['css-path']) || !file_exists($this->options['css-path'])) {
 					$this->pz_SetStyle();
 				}
 			}
 		} else {
-			if (!isset($this->options['style'])) {
-				if (!isset($this->options['css-url'])) {
+			if (!$this->options['style']) {
+				if (!$this->options['css-url']) {
 					$this->pz_SetStyle();
 				}
 			}
@@ -256,14 +264,38 @@ class Pz_LinkCard {
 	}
 
 	// テキストリンクの行とURLのみの行をリンクカードへ置き換える処理（直接HTMLタグにするのでは無くショートコードに変換する。）
-	public function auto_replace($contents) {
-		if (isset($this->options['auto-atag']) && $this->options['auto-atag']) {
-			$contents	= preg_replace( '/(^|<br ?\/?>)(<p.*>)?<a .*href=[\'"](https?:\/\/[-_\.!~*()a-zA-Z0-9;\/?:\@&=+\$,%#]+)[\'"]((?!<IMG).)*<\/a>(<\/p>)?$/im', '[pz-linkcard-auto-replace url="$3"]', $contents);
+	public function auto_replace($content) {
+		if (!$this->options['auto-external']) {
+			if ($this->options['auto-atag']) {
+				$content	= preg_replace( '/(^|<br ?\/?>)(<p.*>)?<a .*href=[\'"](https?:\/\/[-_\.!~*()a-zA-Z0-9;\/?:\@&=+\$,%#]+)[\'"]((?!<IMG).)*<\/a>(<\/p>)?$/im', '[pz-linkcard-auto-replace url="$3"]', $content);
+			}
+			if ($this->options['auto-url']) {
+				$content	= preg_replace( '/(^|<br ?\/?>)(<p.*>)?(https?:\/\/[-_\.!~*()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(<\/p>|<br ?\/?>)?$/im', '[pz-linkcard-auto-replace url="$3"]', $content);
+			}
+			return $content;
+		} else {
+			if ($this->options['auto-atag']) {
+				preg_match_all('/(^|<br ?\/?>)(<p.*>)?(<a .*href=[\'"](https?:\/\/[-_\.!~*()a-zA-Z0-9;\/?:\@&=+\$,%#]+)[\'"]((?!<IMG).)*<\/a>)(<\/p>)?$/im', $content, $m );
+				for ($i=0; $i<count($m[0]); $i++) {
+					$url = $m[4][$i];
+					if ($this->Pz_LinkType($url ) == 0) {
+						$tag = '[pz-linkcard-auto-replace url="'.$url.'"]';
+						$content = preg_replace('{'.$m[0][$i].'}', $tag, $content, 1);
+					}
+				}
+			}
+			if ($this->options['auto-url']) {
+				preg_match_all('/(^|<br ?\/?>)(<p.*>)?(https?:\/\/[-_\.!~*()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(<\/p>|<br ?\/?>)?$/im', $content, $m );
+				for ($i=0; $i<count($m[0]); $i++) {
+					$url = $m[3][$i];
+					if ($this->Pz_LinkType($url ) == 0) {
+						$tag = '[pz-linkcard-auto-replace url="'.$url.'"]';
+						$content = preg_replace('{'.$m[0][$i].'}', $tag, $content, 1);
+					}
+				}
+			}
+			return $content;
 		}
-		if (isset($this->options['auto-url']) && $this->options['auto-url']) {
-			$contents	= preg_replace( '/(^|<br ?\/?>)(<p.*>)?(https?:\/\/[-_\.!~*()a-zA-Z0-9;\/?:\@&=+\$,%#]+)(<\/p>|<br ?\/?>)?$/im', '[pz-linkcard-auto-replace url="$3"]', $contents);
-		}
-		return $contents;
 	}
 
 	// ショートコード処理
@@ -271,6 +303,8 @@ class Pz_LinkCard {
 		// 実行時間
 		if ($this->options['debug-time']) {
 			$start_time = microtime(true);
+			echo	PHP_EOL.'<!-- Pz-LkC [Debug mode: On] /-->'.PHP_EOL;
+			echo	'<!-- Pz-LkC [Shortcode] /-->'.PHP_EOL;
 		}
 		
 		// URL
@@ -293,7 +327,7 @@ class Pz_LinkCard {
 			}
 		}
 		$url_org		=	$url;							// 指定されたurlパラメータ
-		$url			=	$this->pz_TrimURL( $url );
+		$url			=	$this->pz_TrimURL( $url );		// URLエンティティ化など（無害化？）
 		if			( !$url ) {
 			if ($this->options['debug-time']) {
 				echo	'<!-- Pz-LkC ['.html_entity_decode(print_r($atts, true)).'] /-->'.PHP_EOL;
@@ -301,7 +335,7 @@ class Pz_LinkCard {
 			if (!$this->options['flg-invalid']) {
 				if (!preg_match('/\/wp-admin\/admin-ajax.php/i', $_SERVER["REQUEST_URI"])) {
 					$this->options['flg-invalid']		=	'1';
-					$this->options['invalid-url']		=	(empty($_SERVER["HTTPS"]) ? "http://" : "https://").$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
+					$this->options['invalid-url']		=	(!$_SERVER["HTTPS"] ? "http://" : "https://").$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
 					$this->options['invalid-time']		=	$this->now;
 					$result = update_option('Pz_LinkCard_options', $this->options);
 				}
@@ -343,7 +377,7 @@ class Pz_LinkCard {
 		if ($this->options['debug-time']) {
 			$end_time		= microtime(true);
 			$elasped_time	= number_format($end_time - $start_time, 8, '.', ',');
-			$data = PHP_EOL.'<!-- Pz-LkC -->'.PHP_EOL.$data.PHP_EOL.'<!-- /Pz-LkC ('.$elasped_time.'sec) -->'.PHP_EOL;
+			echo	'<!-- Pz-LkC [ElaspedTime='.$elasped_time.'sec] /-->'.PHP_EOL;
 		}
 		
 		return	$data;
@@ -365,8 +399,7 @@ class Pz_LinkCard {
 			echo	'<!-- Pz-LkC [MOBILE='.$is_mobile.'] /-->'.PHP_EOL;
 		}
 		
-		// URLエンティティ化など（無害化？）
-		$url			= $this->pz_TrimURL( $atts['url'] );
+		$url			= $atts['url'];
 		if (!isset($url) || $url == '' ) {
 			return null;
 		}
@@ -382,38 +415,7 @@ class Pz_LinkCard {
 		$location		=	substr($url, mb_strlen($domain_url));	// ドメイン名以降
 		
 		// 自サイトチェック
-		if (substr($url, 0, mb_strlen(home_url() ) ) == home_url() ) {
-			if ($this->pz_TrimURL(get_permalink()) == $url) {
-				$link_type	= 1;					// 自ページ
-			} else {
-				$link_type	= 2;					// 自サイト内
-			}
-		} else {
-			$link_type		= 0;					// 外部サイト
-		}
-		// サブディレクトリ型マルチサイト対応
-		if ($this->options['flg-subdir'] && is_multisite() && !is_subdomain_install() && is_main_site) {
-			$this_blog_id = get_current_blog_id();
-			$blog_id = 0;
-			do {
-				$blog_id++;
-				$blog_url = get_site_url($blog_id);
-				if ($blog_url && $blog_id <> $this_blog_id && substr($url, 0, mb_strlen($blog_url) ) == $blog_url ) {
-					// ドメイン名
-					if (preg_match('/https?:\/\/(.*)\//i', $blog_url.'/',$m)) {
-						$domain_url	= $m[0];
-						$domain		= $m[1];
-					} else {
-						$domain_url	= null;
-						$domain		= null;
-					}
-					$link_type		=	0;	// 外部サイト
-				}
-			} while ($blog_url);
-		}
-		if ($this->options['debug-time']) {
-			echo	'<!-- Pz-LkC [TYPE='.$link_type.'] /-->'.PHP_EOL;
-		}
+		$link_type		=	$this->Pz_LinkType($url);
 		
 		// モバイルかPCかのクラス名を追加
 		$class_id		= 'linkcard';
@@ -448,7 +450,7 @@ class Pz_LinkCard {
 			}
 			$nofollow		= '';					// 内部サイトにnoflollowは付けない
 			
-			// キャッシュが無い、もしくは常に最新を取得する、もしくは強制取得
+			// キャッシュが無い、もしくは強制取得
 			if ( is_null($data_id) || ( isset($atts['force']) && $atts['force'] == true ) ) {
 				if ($this->options['debug-time']) {
 					echo	'<!-- Pz-LkC [IN-POST] /-->'.PHP_EOL;
@@ -504,6 +506,7 @@ class Pz_LinkCard {
 		$sns_tw			= (isset($data['sns_twitter'])	? $data['sns_twitter'] : null);
 		$sns_fb			= (isset($data['sns_facebook'])	? $data['sns_facebook'] : null);
 		$sns_hb			= (isset($data['sns_hatena'])	? $data['sns_hatena'] : null);
+		$sns_po			= (isset($data['sns_pocket'])	? $data['sns_pocket'] : null);
 		$alive_result	= (isset($data['alive_result'])	? $data['alive_result'] : null);
 		
 		$thumbnail		= null;
@@ -543,7 +546,7 @@ class Pz_LinkCard {
 		// 外部リンクの処理
 		if ( !$link_type && isset($this->options['use-hatena']) && !is_null($this->options['use-hatena'] ) ) {
 			// 「はてなブログカード」をそのまま利用する
-			$tag = '<div class="lkc-iframe-wrap"><iframe src="https://hatenablog-parts.com/embed?url='.$url.'" class="lkc-iframe" scrolling="no" frameborder="0"></iframe></div>';
+			$tag = '<div class="lkc-iframe-wrap"><iframe src="https://hatenablog-parts.com/embed?url=' .$url.'" class="lkc-iframe" scrolling="no" frameborder="0"></iframe></div>';
 			if (isset($this->options['blockquote']) ? $this->options['blockquote'] : null == '1') {
 				$tag = '<div class="'.$class_id.'"><blockquote class="lkc-quote">'.$tag.'</blockquote></div>';
 			} else {
@@ -676,7 +679,7 @@ class Pz_LinkCard {
 			$st_cl		= '</strike>';
 		} elseif ((isset($this->options['link-all']) ? $this->options['link-all'] : null) == '1') {
 			// カード全体をリンク（どこをクリックしても良いのが分かり易い）
-			$a_op_all	= '<a class="no_icon" href="'.$url.'"'.$target.$nofollow.'>';
+			$a_op_all	= '<a class="lkc-link no_icon" href="'.$url.'"'.$target.$nofollow.'>';
 			$a_cl_all	= '</a>';
 			$a_op		= '';
 			$a_cl		= '';
@@ -686,7 +689,7 @@ class Pz_LinkCard {
 			// タイトルとかURLとかを個別でリンク（タイトルや抜粋文などの文字を範囲指定をしてコピー等がし易い）
 			$a_op_all	= '';
 			$a_cl_all	= '';
-			$a_op		= '<a class="no_icon" href="'.$url.'"'.$target.$nofollow.'>';
+			$a_op		= '<a class="lkc-link no_icon" href="'.$url.'"'.$target.$nofollow.'>';
 			$a_cl		= '</a>';
 			$st_op		= '';
 			$st_cl		= '';
@@ -709,16 +712,22 @@ class Pz_LinkCard {
 				if (isset($this->options['sns-hb']) && !is_null($this->options['sns-hb']) && $sns_hb > 0) {
 					$sns .= ' <span class="lkc-sns-hb">'.$sns_hb.'&nbsp;user'.(($sns_hb > 1) ? 's' : '').'</span>';
 				}
+				if (isset($this->options['sns-po']) && !is_null($this->options['sns-po']) && $sns_po > 0) {
+					$sns .= ' <span class="lkc-sns-po">'.$sns_po.'&nbsp;pocket'.(($sns_po > 1) ? 's' : '').'</span>';
+				}
 			} else {
 				// 外部リンクアイコンを表示させるプラグイン対応のため no_icon を付与
 				if (isset($this->options['sns-tw']) && !is_null($this->options['sns-tw']) && $sns_tw > 0) {
-					$sns .= ' <a class="lkc-sns-tw no_icon" href="https://twitter.com/intent/tweet?url=' .rawurlencode($url).'&text='.esc_html($title).'" target="_blank">'.$sns_tw.'&nbsp;tweet'.(($sns_tw > 1) ? 's' : '').'</a>';
+					$sns .= ' <a class="lkc-sns-tw no_icon" href="https://twitter.com/search?q=' .preg_replace('/.*\/\/(.*)/', '$1', $url).'&text='.esc_html($title).'" target="_blank">'.$sns_tw.'&nbsp;tweet'.(($sns_tw > 1) ? 's' : '').'</a>';
 				}
 				if (isset($this->options['sns-fb']) && !is_null($this->options['sns-fb']) && $sns_fb > 0) {
-					$sns .= ' <a class="lkc-sns-fb no_icon" href="https://www.facebook.com/sharer/sharer.php?u=' .rawurlencode($url).'" target="_blank">'.$sns_fb.'&nbsp;share'.(($sns_fb > 1) ? 's' : '').'</a>';
+					$sns .= ' <a class="lkc-sns-fb no_icon" href="https://www.facebook.com/" target="_blank">'.$sns_fb.'&nbsp;share'.(($sns_fb > 1) ? 's' : '').'</a>';
 				}
 				if (isset($this->options['sns-hb']) && !is_null($this->options['sns-hb']) && $sns_hb > 0) {
-					$sns .= ' <a class="lkc-sns-hb no_icon" href="https://b.hatena.ne.jp/entry.count?url=' .rawurlencode($url).'" target="_blank">'.$sns_hb.'&nbsp;user'.(($sns_hb > 1) ? 's' : '').'</a>';
+					$sns .= ' <a class="lkc-sns-hb no_icon" href="https://b.hatena.ne.jp/entry/s/' .preg_replace('/.*\/\/(.*)/', '$1', $url).'" target="_blank">'.$sns_hb.'&nbsp;user'.(($sns_hb > 1) ? 's' : '').'</a>';
+				}
+				if (isset($this->options['sns-po']) && !is_null($this->options['sns-po']) && $sns_po > 0) {
+					$sns .= ' <a class="lkc-sns-po no_icon" href="https://getpocket.com/" target="_blank">'.$sns_po.'&nbsp;pocket'.(($sns_po > 1) ? 's' : '').'</a>';
 				}
 			}
 			if ($sns) {
@@ -748,7 +757,7 @@ class Pz_LinkCard {
 		if ( $more && $more_text ) {
 			$moretag	=	'<div class="lkc-more">'.$a_op.'<span class="lkc-more-text">'.$more_text.'</span>'.$a_cl.'</div>';
 		} else {
-			$moretag	=	null;
+			$moretag	=	'';
 		}
 		
 		// リンク先URL
@@ -763,10 +772,15 @@ class Pz_LinkCard {
 		}
 		
 		// サイト情報
-		$domain_info = '<div class="lkc-info">'.$a_op.'<span class="lkc-domain"'.$site_title.'>'.$favicon.'&nbsp;'.$site_name.$info.'</span>'.$a_cl.$sns_info.$url2.'</div>';
+		if ($info) {
+			$added_info	=	'<span class="lkc-added">'.$info.'</span>';
+		} else {
+			$added_info	=	'';
+		}
+		$domain_info	=	'<div class="lkc-info">'.$a_op.'<span class="lkc-domain"'.$site_title.'>'.$favicon.'&nbsp;'.$site_name.'</span>'.$added_info.$a_cl.$sns_info.$url2.'</div>';
 		
 		// 記事内容
-		$content = '<div class="lkc-content">'.$a_op.$thumbnail.'<span class="lkc-title">'.$title.'</span>'.$a_cl.$sns_title.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div>';
+		//$content = '<div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div>';
 		
 		// Google AMPに対応
 		if ( (function_exists('is_amp_endpoint') && is_amp_endpoint()) || isset($this->amp) || ( isset($this->options['flg-amp-url']) && ( preg_match('/\/amp\/?$/i', $_SERVER["REQUEST_URI"]) || preg_match('/\?amp=1$/i', $_SERVER["REQUEST_URI"]) ) ) ) {
@@ -776,13 +790,16 @@ class Pz_LinkCard {
 			// HTMLタグ作成
 			switch (isset($this->options['info-position']) ? $this->options['info-position'] : null) {
 			case '1':
-				$tag = $wrap_op.$a_op_all.'<div class="lkc-card">'.$domain_info.$content.'<div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card">'.$domain_info.'<div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div></div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 				break;
 			case '2':
-				$tag = $wrap_op.$a_op_all.'<div class="lkc-card">'.$content.$domain_info.'<div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div></div>'.$domain_info.'<div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				break;
+			case '3':
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.$domain_info.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.$url1.'</div><div class="lkc-excerpt">'.$excerpt.'</div></div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 				break;
 			default:
-				$tag = $wrap_op.$a_op_all.'<div class="lkc-card">'.$content.'<div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div></div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 			}
 		}
 		
@@ -833,6 +850,43 @@ class Pz_LinkCard {
 		return	$url;
 	}
 
+	// 内部サイト・外部サイトの判断
+	function pz_LinkType($url = null) {
+		if (substr($url, 0, mb_strlen(home_url() ) ) == home_url() ) {
+			if (get_permalink() == $url) {
+				$link_type	= 1;					// 自ページ
+			} else {
+				$link_type	= 2;					// 自サイト内
+			}
+		} else {
+			$link_type		= 0;					// 外部サイト
+		}
+		// サブディレクトリ型マルチサイト対応
+		if ($this->options['flg-subdir'] && is_multisite() && !is_subdomain_install() && is_main_site) {
+			$this_blog_id = get_current_blog_id();
+			$blog_id = 0;
+			do {
+				$blog_id++;
+				$blog_url = get_site_url($blog_id);
+				if ($blog_url && $blog_id <> $this_blog_id && substr($url, 0, mb_strlen($blog_url) ) == $blog_url ) {
+					// ドメイン名
+					if (preg_match('/https?:\/\/(.*)\//i', $blog_url.'/',$m)) {
+						$domain_url	= $m[0];
+						$domain		= $m[1];
+					} else {
+						$domain_url	= null;
+						$domain		= null;
+					}
+					$link_type		=	0;	// 外部サイト
+				}
+			} while ($blog_url);
+		}
+		if ($this->options['debug-time']) {
+			echo	'<!-- Pz-LkC [TYPE='.$link_type.'] /-->'.PHP_EOL;
+		}
+		return		$link_type;
+	}
+
 	// 相対パスをURLにする
 	public function pz_RelToURL( $base_url = '', $rel_path = '' ) {
 		if (preg_match('/^https?\:\/\//', $rel_path ) ) {	// 絶対パスだった場合
@@ -878,7 +932,7 @@ class Pz_LinkCard {
 			$count_before = isset($data['sns_twitter']) ? $data['sns_twitter'] : -1;
 			if ($sns_renew || $count_before < 0) {
 //				$result = wp_remote_get( 'http://urls.api.twitter.com/1/urls/count.json?url=' .rawurlencode($data['url']), $opt );
-				$result = wp_remote_get( 'http://jsoon.digitiminimi.com/twitter/count.json?url=' .rawurlencode($data['url']), $opt );
+				$result = wp_remote_get( 'https://jsoon.digitiminimi.com/twitter/count.json?url=' .rawurlencode($data['url']), $opt );
 				if (isset($result) && !is_wp_error($result) && $result['response']['code'] == 200) {
 					$count = intval(json_decode($result['body'])->count);
 					if ($count > $count_before) {
@@ -892,7 +946,7 @@ class Pz_LinkCard {
 		if (isset($this->options['sns-fb']) && !is_null($this->options['sns-fb'])) {
 			$count_before = intval(isset($data['sns_facebook']) ? $data['sns_facebook'] : -1);
 			if ($sns_renew || $count_before < 0) {
-				$result = wp_remote_get( 'http://graph.facebook.com/?id=' .rawurlencode($data['url']), $opt );
+				$result = wp_remote_get( 'https://graph.facebook.com/?id=' .rawurlencode($data['url']), $opt );
 				if (isset($result) && !is_wp_error($result) && $result['response']['code'] == 200) {
 					$json = json_decode($result['body']);
 					$count = intval(isset($json->share->share_count) ? $json->share->share_count : 0);
@@ -918,6 +972,21 @@ class Pz_LinkCard {
 			}
 		}
 		
+		if (isset($this->options['sns-po']) && !is_null($this->options['sns-po'])) {
+			$count_before = isset($data['sns_pocket']) ? $data['sns_pocket'] : -1;
+			if ($sns_renew || $count_before < 0) {
+				$result = wp_remote_get( 'https://widgets.getpocket.com/v1/button?label=pocket&count=vertical&align=left&v=1&src=https&url=' .rawurlencode($data['url']), $opt );
+				if (isset($result) && !is_wp_error($result) && $result['response']['code'] == 200) {
+					preg_match('/<em id="cnt">([0-9]*)<\/em>/', $result['body'], $m);
+					$count = intval($m[1] ? $m[1] : 0);
+					if ($count > $count_before) {
+						$data['sns_pocket'] = $count;
+						$update_cnt = true;
+					}
+				}
+			}
+		}
+		
 		// 登録してから一週間までは毎日、それ以降は週一回更新（取得が固まらないようにランダム時間付与）
 		if ($update_cnt || ($this->now - strtotime($data['regist']) < WEEK_IN_SECONDS)) {
 			$sns_nexttime = $this->now + DAY_IN_SECONDS + rand(0, DAY_IN_SECONDS);	// 1day + 0-24h
@@ -937,6 +1006,7 @@ class Pz_LinkCard {
 				'sns_twitter'	=> $data['sns_twitter'],
 				'sns_facebook'	=> $data['sns_facebook'],
 				'sns_hatena'	=> $data['sns_hatena'],
+				'sns_pocket'	=> $data['sns_pocket'],
 				'sns_time'		=> $this->now,
 				'sns_nexttime'	=> $sns_nexttime,
 				'uptime'		=> $this->now
@@ -954,8 +1024,8 @@ class Pz_LinkCard {
 			return null;
 		}
 		global $wpdb;
-		if (isset($data['url']) && !is_null($data['url'])) {
-			$url		= $this->pz_TrimURL($data['url']);
+		if (!empty($data['url'])) {
+			$url		= $data['url'];
 			$data		= $wpdb->get_row($wpdb->prepare("SELECT * FROM $this->db_name WHERE url=%s", $url));
 		} elseif (isset($data['id']) && !is_null($data['id'])) {
 			$data_id	= intval($data['id']);
@@ -1212,7 +1282,7 @@ class Pz_LinkCard {
 		} else {
 			$before['mod_excerpt']	=	1;
 		}
-		if		(empty($data['use_post_id1'])) {
+		if		(!$data['use_post_id1']) {
 			$data['use_post_id1']	=	get_the_ID();
 		}
 		$data['scheme']				=	$scheme;
@@ -1343,10 +1413,9 @@ class Pz_LinkCard {
 						break;
 					}
 				}
-				// $charset			= mb_detect_encoding( $html );		// PHPに判定をまかせたい人向け
 			}
 			if (is_null($charset)) {
-				$charset = 'auto';
+				$charset = mb_detect_encoding($html, 'ASCII,JIS,UTF-7,EUC-JP,SJIS,UTF-8');
 				$html = mb_convert_encoding($html, $this->charset, 'ASCII,JIS,UTF-7,EUC-JP,SJIS,UTF-8');
 			} elseif ($this->charset <> $charset) {
 				$html = mb_convert_encoding($html, $this->charset, $charset);
@@ -1450,7 +1519,7 @@ class Pz_LinkCard {
 		$data['domain']				=	$domain;
 		$data['location']			=	$location;
 		$data['favicon']			=	( isset($favicon_url) ? $favicon_url : null );
-		if		(empty($data['use_post_id1'])) {
+		if		(!$data['use_post_id1']) {
 			$data['use_post_id1']	=	get_the_ID();
 		}
 		$data['sns_twitter']		=	(isset( $data['sns_twitter']	) ? $data['sns_twitter']	: -1	);
@@ -1471,7 +1540,7 @@ class Pz_LinkCard {
 		}
 		
 		// TITLEタグ
-		if (preg_match('/<\s*title\s*[^>]*>\s*(.*)\s*<\s*\/title\s*[^>]*>/si', $html, $m)) {
+		if (preg_match('/<\s*title\s*[^>]*>\s*([^<]*)\s*<\s*\/title\s*[^>]*>/si', $html, $m)) {
 			$tags['title'] = esc_html($m[1]);
 		}
 		
@@ -1634,7 +1703,7 @@ class Pz_LinkCard {
 		}
 		
 		global $wpdb;
-		$result	= (array) $wpdb->get_results($wpdb->prepare("SELECT url,alive_time FROM $this->db_name WHERE alive_time<%d ORDER BY alive_time ASC, id ASC", $this->now - WEEK_IN_SECONDS ));
+		$result	= (array) $wpdb->get_results($wpdb->prepare("SELECT url,alive_time FROM $this->db_name WHERE alive_nexttime<%d ORDER BY alive_time ASC, id ASC", $this->now - WEEK_IN_SECONDS ));
 		$i		= 0;
 		if (isset($result) && is_array($result) && count($result) > 0) {
 			foreach($result as $data) {
@@ -1658,6 +1727,7 @@ class Pz_LinkCard {
 					}
 					$before['alive_result']		=	$after['result_code'];
 					$before['alive_time']		=	$this->now;
+					$before['alive_nexttime']	=	$this->now + WEEK_IN_SECONDS * 4 + rand(0, DAY_IN_SECONDS);
 					$before['thumbnail']		=	$after['thumbnail'];
 					$before['favicon']			=	$after['favicon'];
 					$before		= $this->pz_SetCache( $before );

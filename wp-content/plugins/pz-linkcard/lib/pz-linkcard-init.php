@@ -7,9 +7,6 @@
 			}
 		}
 		
-		// 現バージョン
-		$this->options['plugin-version'] = $this->defaults['plugin-version'];
-		
 		// サムネイルのキャッシュディレクトリの用意
 		$wp_upload_dir	=	wp_upload_dir();
 		$thumbnail_dir	=	$wp_upload_dir['basedir'].'/'.$this->slug.'/cache/';
@@ -28,8 +25,17 @@
 		$this->options['thumbnail-url']	=	$thumbnail_url;
 		
 		// 暫定措置
-		$this->options['flg-button']	=	'1';
-		$this->options['flg-qtag']		=	'1';
+		if ($this->options['plugin-version'] < '2.1.7') {
+			$this->options['flg-anker']		=	'1';
+		}
+		if ($this->options['plugin-version'] < '2.1.8') {
+			if ($this->options['sns-tw'] && $this->options['sns-fb'] && $this->options['sns-hb']) {
+				$this->options['sns-po']	=	'1';
+			}
+		}
+		
+		// 現バージョン
+		$this->options['plugin-version'] = $this->defaults['plugin-version'];
 		
 		// オプションの更新
 		update_option('Pz_LinkCard_options', $this->options);
@@ -61,6 +67,7 @@
 					sns_twitter		INT				DEFAULT -1,
 					sns_facebook	INT				DEFAULT -1,
 					sns_hatena		INT				DEFAULT -1,
+					sns_pocket		INT				DEFAULT -1,
 					post_id			INT				UNSIGNED	DEFAULT 0,
 					use_post_id1	INT				UNSIGNED,
 					use_post_id2	INT				UNSIGNED,
@@ -78,6 +85,7 @@
 					mod_title		INT				UNSIGNED	NOT NULL	DEFAULT 0,
 					mod_excerpt		INT				UNSIGNED	NOT NULL	DEFAULT 0,
 					alive_time		BIGINT			UNSIGNED	NOT NULL	DEFAULT 0,
+					alive_nexttime	BIGINT			UNSIGNED	NOT NULL	DEFAULT 0,
 					alive_result	INT				DEFAULT -1,
 					uptime			BIGINT			UNSIGNED	NOT NULL	DEFAULT 0,
 					nexttime		BIGINT			UNSIGNED	NOT NULL	DEFAULT 0,
@@ -153,6 +161,7 @@
 		// 過去バージョンからのコンバート（生存確認用のデータ作成）
 		$result		=	$wpdb->get_results("UPDATE $this->db_name SET result_code = 200 WHERE result_code IS NULL OR result_code = 0");
 		$result		=	$wpdb->get_results("UPDATE $this->db_name SET alive_result = result_code , alive_time = uptime WHERE alive_result IS NULL OR alive_result = 0 OR alive_time = 0");
+		$result		=	$wpdb->get_results("UPDATE $this->db_name SET alive_nexttime = alive_time  WHERE alive_nexttime IS NULL OR alive_nexttime = 0");
 		
 		// 過去バージョンからのコンバート（取得時テキストの作成）
 		$result		=	$wpdb->get_results("UPDATE $this->db_name SET regist_title = title , regist_excerpt = excerpt , regist_time = uptime , regist_result = result_code , regist_charset = charset WHERE (regist_title = '' AND regist_excerpt = '' ) AND (title <> '' OR excerpt <> '')");

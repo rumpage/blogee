@@ -67,6 +67,8 @@
 			$this->options['height-excerpt']	=	pz_TrimNum($this->options['height-excerpt'],	$this->defaults['height-excerpt']).'px';
 			$this->options['size-info']			=	pz_TrimNum($this->options['size-info'],			$this->defaults['size-info']).'px';
 			$this->options['height-info']		=	pz_TrimNum($this->options['height-info'],		$this->defaults['height-info']).'px';
+			$this->options['size-added']		=	pz_TrimNum($this->options['size-added'],		$this->defaults['size-added']).'px';
+			$this->options['height-added']		=	pz_TrimNum($this->options['height-added'],		$this->defaults['height-added']).'px';
 			$this->options['size-more']			=	pz_TrimNum($this->options['size-more'],			$this->defaults['size-more']).'px';
 			$this->options['height-more']		=	pz_TrimNum($this->options['height-more'],		$this->defaults['height-more']).'px';
 			$this->options['thumbnail-width']	=	pz_TrimNum($this->options['thumbnail-width'],	$this->defaults['thumbnail-width']).'px';
@@ -78,6 +80,9 @@
 
 			$color_code = preg_replace('/[^0-9a-f]/i', '', $this->options['color-info']);
 			$this->options['color-info']	= '#'.$color_code;
+
+			$color_code = preg_replace('/[^0-9a-f]/i', '', $this->options['color-added']);
+			$this->options['color-added']	= '#'.$color_code;
 
 			$color_code = preg_replace('/[^0-9a-f]/i', '', $this->options['color-title']);
 			$this->options['color-title']	= '#'.$color_code;
@@ -146,7 +151,9 @@
 						<select name="properties[special-format]">
 							<option value=""	<?php if($this->options['special-format'] == '')	echo 'selected="selected"'; ?>><?php _e('None', $this->text_domain); ?></option>
 							<option value="LkC"	<?php if($this->options['special-format'] == 'LkC')	echo 'selected="selected"'; ?>><?php _e('Pz-LkC Default', $this->text_domain); ?></option>
-							<option value="hbc"	<?php if($this->options['special-format'] == 'hbc')	echo 'selected="selected"'; ?>><?php _e('Simple', $this->text_domain); ?></option>
+							<option value="smp"	<?php if($this->options['special-format'] == 'smp')	echo 'selected="selected"'; ?>><?php _e('Simple', $this->text_domain); ?></option>
+							<option value="hbc"	<?php if($this->options['special-format'] == 'hbc')	echo 'selected="selected"'; ?>><?php _e('Normal', $this->text_domain); ?></option>
+							<option value="JIN"	<?php if($this->options['special-format'] == 'JIN')	echo 'selected="selected"'; ?>><?php _e('Headline', $this->text_domain); ?></option>
 							<option value="sqr"	<?php if($this->options['special-format'] == 'sqr')	echo 'selected="selected"'; ?>><?php _e('Square', $this->text_domain); ?></option>
 							<option value="ct1"	<?php if($this->options['special-format'] == 'ct1')	echo 'selected="selected"'; ?>><?php _e('Cellophane tape "center"', $this->text_domain); ?></option>
 							<option value="ct2"	<?php if($this->options['special-format'] == 'ct2')	echo 'selected="selected"'; ?>><?php _e('Cellophane tape "Top corner"', $this->text_domain); ?></option>
@@ -238,6 +245,7 @@
 													<option value="4px" <?php if($this->options['card-top'] == '4px') echo 'selected="selected"'; ?>><?php _e('4px', $this->text_domain); ?></option>
 													<option value="8px" <?php if($this->options['card-top'] == '8px') echo 'selected="selected"'; ?>><?php _e('8px', $this->text_domain); ?></option>
 													<option value="16px" <?php if($this->options['card-top'] == '16px') echo 'selected="selected"'; ?>><?php _e('16px', $this->text_domain); ?></option>
+													<option value="24px" <?php if($this->options['card-top'] == '24px') echo 'selected="selected"'; ?>><?php _e('24px', $this->text_domain); ?></option>
 													<option value="32px" <?php if($this->options['card-top'] == '32px') echo 'selected="selected"'; ?>><?php _e('32px', $this->text_domain); ?></option>
 													<option value="64px" <?php if($this->options['card-top'] == '64px') echo 'selected="selected"'; ?>><?php _e('64px', $this->text_domain); ?></option>
 													<option value="0" <?php if($this->options['card-top'] == '0') echo 'selected="selected"'; ?>><?php _e('0', $this->text_domain); ?></option>
@@ -252,6 +260,7 @@
 													<option value="4px" <?php if($this->options['card-left'] == '4px') echo 'selected="selected"'; ?>><?php _e('4px', $this->text_domain); ?></option>
 													<option value="8px" <?php if($this->options['card-left'] == '8px') echo 'selected="selected"'; ?>><?php _e('8px', $this->text_domain); ?></option>
 													<option value="16px" <?php if($this->options['card-left'] == '16px') echo 'selected="selected"'; ?>><?php _e('16px', $this->text_domain); ?></option>
+													<option value="24px" <?php if($this->options['card-left'] == '24px') echo 'selected="selected"'; ?>><?php _e('24px', $this->text_domain); ?></option>
 													<option value="32px" <?php if($this->options['card-left'] == '32px') echo 'selected="selected"'; ?>><?php _e('32px', $this->text_domain); ?></option>
 													<option value="64px" <?php if($this->options['card-left'] == '64px') echo 'selected="selected"'; ?>><?php _e('64px', $this->text_domain); ?></option>
 													<option value="0" <?php if($this->options['card-left'] == '0') echo 'selected="selected"'; ?>><?php _e('0', $this->text_domain); ?></option>
@@ -264,6 +273,7 @@
 													<option value="4px" <?php if($this->options['card-right'] == '4px') echo 'selected="selected"'; ?>><?php _e('4px', $this->text_domain); ?></option>
 													<option value="8px" <?php if($this->options['card-right'] == '8px') echo 'selected="selected"'; ?>><?php _e('8px', $this->text_domain); ?></option>
 													<option value="16px" <?php if($this->options['card-right'] == '16px') echo 'selected="selected"'; ?>><?php _e('16px', $this->text_domain); ?></option>
+													<option value="24px" <?php if($this->options['card-right'] == '24px') echo 'selected="selected"'; ?>><?php _e('24px', $this->text_domain); ?></option>
 													<option value="32px" <?php if($this->options['card-right'] == '32px') echo 'selected="selected"'; ?>><?php _e('32px', $this->text_domain); ?></option>
 													<option value="64px" <?php if($this->options['card-right'] == '64px') echo 'selected="selected"'; ?>><?php _e('64px', $this->text_domain); ?></option>
 													<option value="0" <?php if($this->options['card-right'] == '0') echo 'selected="selected"'; ?>><?php _e('0', $this->text_domain); ?></option>
@@ -284,6 +294,7 @@
 													<option value="4px" <?php if($this->options['card-bottom'] == '4px') echo 'selected="selected"'; ?>><?php _e('4px', $this->text_domain); ?></option>
 													<option value="8px" <?php if($this->options['card-bottom'] == '8px') echo 'selected="selected"'; ?>><?php _e('8px', $this->text_domain); ?></option>
 													<option value="16px" <?php if($this->options['card-bottom'] == '16px') echo 'selected="selected"'; ?>><?php _e('16px', $this->text_domain); ?></option>
+													<option value="24px" <?php if($this->options['card-bottom'] == '24px') echo 'selected="selected"'; ?>><?php _e('24px', $this->text_domain); ?></option>
 													<option value="32px" <?php if($this->options['card-bottom'] == '32px') echo 'selected="selected"'; ?>><?php _e('32px', $this->text_domain); ?></option>
 													<option value="64px" <?php if($this->options['card-bottom'] == '64px') echo 'selected="selected"'; ?>><?php _e('64px', $this->text_domain); ?></option>
 													<option value="0" <?php if($this->options['card-bottom'] == '0') echo 'selected="selected"'; ?>><?php _e('0', $this->text_domain); ?></option>
@@ -342,11 +353,26 @@
 								<td colspan="2">
 									<?php _e('Site information', $this->text_domain); ?>
 									<select name="properties[info-position]">
-										<option value=""  <?php if($this->options['info-position'] == '')  echo 'selected="selected"'; ?>><?php _e('None',		$this->text_domain); ?></option>
-										<option value="1" <?php if($this->options['info-position'] == '1') echo 'selected="selected"'; ?>><?php _e('Top',		$this->text_domain); ?></option>
-										<option value="2" <?php if($this->options['info-position'] == '2') echo 'selected="selected"'; ?>><?php _e('Bottom',	$this->text_domain); ?></option>
+										<option value=""  <?php if($this->options['info-position'] == '')  echo 'selected="selected"'; ?>><?php _e('None',				$this->text_domain); ?></option>
+										<option value="1" <?php if($this->options['info-position'] == '1') echo 'selected="selected"'; ?>><?php _e('Top',				$this->text_domain); ?></option>
+										<option value="3" <?php if($this->options['info-position'] == '3') echo 'selected="selected"'; ?>><?php _e('Above the title',	$this->text_domain); ?></option>
+										<option value="2" <?php if($this->options['info-position'] == '2') echo 'selected="selected"'; ?>><?php _e('Bottom',			$this->text_domain); ?></option>
 									</select>
 									<label><input name="properties[use-sitename]" type="checkbox" id="check" value="1" <?php checked(isset($this->options['use-sitename']) ? $this->options['use-sitename'] : null, 1); ?> /><?php _e('Use SiteName', $this->text_domain); ?></label>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label><input name="properties[heading]" type="checkbox" id="check" value="1" <?php checked(isset($this->options['heading']) ? $this->options['heading'] : null, 1); ?> /><?php _e('Make additional information heading display', $this->text_domain); ?></label>
+								</td>
+								<td>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label><input name="properties[flg-anker]" type="checkbox" id="check" value="1" <?php checked(isset($this->options['flg-anker']) ? $this->options['flg-anker'] : null, 1); ?> /><?php _e('Turn off the anchor text underlining', $this->text_domain); ?></label>
+								</td>
+								<td>
 								</td>
 							</tr>
 							<tr>
@@ -407,8 +433,21 @@
 							</tr>
 							<tr>
 								<td>
+									<?php _e('Round a square', $this->text_domain); ?>
+									<select name="properties[radius]">
+										<option value=""  <?php if($this->options['radius'] == '')  echo 'selected="selected"'; ?>><?php _e('None',		$this->text_domain); ?></option>
+										<option value="2" <?php if($this->options['radius'] == '2') echo 'selected="selected"'; ?>><?php _e('4px',		$this->text_domain); ?></option>
+										<option value="1" <?php if($this->options['radius'] == '1') echo 'selected="selected"'; ?>><?php _e('8px',		$this->text_domain); ?></option>
+										<option value="3" <?php if($this->options['radius'] == '3') echo 'selected="selected"'; ?>><?php _e('16px',		$this->text_domain); ?></option>
+										<option value="4" <?php if($this->options['radius'] == '4') echo 'selected="selected"'; ?>><?php _e('32px',		$this->text_domain); ?></option>
+										<option value="5" <?php if($this->options['radius'] == '5') echo 'selected="selected"'; ?>><?php _e('64px',		$this->text_domain); ?></option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
 									<label>
-										<input name="properties[radius]" type="checkbox" id="check" value="1" <?php checked(isset($this->options['radius']) ? $this->options['radius'] : null, 1); ?> /><?php _e('Radius', $this->text_domain); ?>
+										<input name="properties[opacity]" type="checkbox" id="check" value="1" <?php checked(isset($this->options['opacity']) ? $this->options['opacity'] : null, 1); ?> /><?php _e('Thinning at mouseover', $this->text_domain); ?>
 									</label>
 								</td>
 							</tr>
@@ -492,16 +531,17 @@
 						<label><input name="properties[sns-tw]"	type="checkbox" id="check" value="1" <?php checked(isset($this->options['sns-tw'])	? $this->options['sns-tw']	: null, 1); ?> /><?php _e('Twitter',	$this->text_domain); ?></label>
 						<label><input name="properties[sns-fb]"	type="checkbox" id="check" value="1" <?php checked(isset($this->options['sns-fb'])	? $this->options['sns-fb']	: null, 1); ?> /><?php _e('Facebook',	$this->text_domain); ?></label>
 						<label><input name="properties[sns-hb]"	type="checkbox" id="check" value="1" <?php checked(isset($this->options['sns-hb'])	? $this->options['sns-hb']	: null, 1); ?> /><?php _e('Hatena',		$this->text_domain); ?></label>
+						<label><input name="properties[sns-po]"	type="checkbox" id="check" value="1" <?php checked(isset($this->options['sns-po'])	? $this->options['sns-po']	: null, 1); ?> /><?php _e('Pocket',		$this->text_domain); ?></label>
 					</td>
 				</tr>
 			</table>
 			<?php submit_button(); ?>
 
-				<h3><?php _e('Letter settings', $this->text_domain); ?></h3>
+			<h3><?php _e('Letter settings', $this->text_domain); ?></h3>
 			<table class="form-table" style="max-width: 900px;">
 
 				<tr valign="top">
-					<th scope="row"><?php _e('Site-info.', $this->text_domain); ?></th>
+					<th scope="row"><?php _e('Site information', $this->text_domain); ?></th>
 					<td colspan="3">
 						<table>
 							<tr>
@@ -526,6 +566,32 @@
 					</td>
 					<td>
 						<?php _e('Length', $this->text_domain); ?><input name="properties[trim-sitename]" type="text" id="inputtext" value="<?php echo (isset($this->options['trim-sitename']) ? $this->options['trim-sitename'] : $this->defaults['trim-sitename']); ?>" style="width: 3em;" />
+					</td>
+				</tr>
+				
+				<tr valign="top">
+					<th scope="row"><?php _e('Added information', $this->text_domain); ?></th>
+					<td colspan="3">
+						<table>
+							<tr>
+								<td>
+									<?php _e('Color', $this->text_domain); ?><input name="properties[color-added]" type="text" class="color-picker" id="pickedcolor" value="<?php		echo esc_attr($this->options['color-added']); ?>" />
+								</td>
+								<td>
+									<label><input name="properties[outline-added]" type="checkbox" id="check" value="1" <?php checked(isset($this->options['outline-added']) ? $this->options['outline-added'] : null, 1); ?> /><?php _e('Outline', $this->text_domain); ?></label>
+									<input name="properties[outline-color-added]" type="text" class="color-picker" id="pickedcolor" value="<?php	echo esc_attr((isset($this->options['outline-color-added']) ? $this->options['outline-color-added'] : $this->defaults['outline-color-added'])); ?>" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"></th>
+					<td>
+						<?php _e('Size',	$this->text_domain); ?><input name="properties[size-added]"		type="text" id="inputtext" value="<?php echo (isset($this->options['size-added']) ? $this->options['size-added'] : $this->defaults['size-added']); ?>" style="width: 4em;" />
+					</td>
+					<td>
+						<?php _e('Height',	$this->text_domain); ?><input name="properties[height-added]"	type="text" id="inputtext" value="<?php echo (isset($this->options['height-added']) ? $this->options['height-added'] : $this->defaults['height-added']); ?>" style="width: 4em;" />
 					</td>
 				</tr>
 
@@ -688,7 +754,7 @@
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e('Site information', $this->text_domain); ?></th>
+					<th scope="row"><?php _e('Added information', $this->text_domain); ?></th>
 					<td><input name="properties[ex-info]" type="text" id="inputtext" value="<?php echo esc_attr($this->options['ex-info']); ?>" class="regular-text" /></td>
 				</tr>
 				<tr valign="top">
@@ -755,7 +821,7 @@
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e('Site information', $this->text_domain); ?></th>
+					<th scope="row"><?php _e('Added information', $this->text_domain); ?></th>
 					<td><input name="properties[in-info]" type="text" id="inputtext" value="<?php echo esc_attr($this->options['in-info']); ?>" class="regular-text" /><br></td>
 				</tr>
 				<tr valign="top">
@@ -809,7 +875,7 @@
 					<td><?php _e('It is common with setting Internal-link', $this->text_domain); ?></td>
 				</re>
 				<tr valign="top">
-					<th scope="row"><?php _e('Site information', $this->text_domain); ?></th>
+					<th scope="row"><?php _e('Added information', $this->text_domain); ?></th>
 					<td><input name="properties[th-info]" type="text" id="inputtext" value="<?php echo esc_attr($this->options['th-info']); ?>" class="regular-text" /></td>
 				</tr>
 				<tr valign="top">
@@ -837,7 +903,7 @@
 						<input name="properties[thumbnail-api]" type="text" id="inputtext" value="<?php echo esc_attr($this->options['thumbnail-api']); ?>" size="80" onclick="this.select(0,this.value.length);" />
 						<p><?php _e('%URL% replace to URL.', $this->text_domain); ?></p>
 						<p><?php _e('ex1.', $this->text_domain); ?><input name="" type="text" id="inputtext" value="https://s.wordpress.com/mshots/v1/%URL%?w=100" size="70" onclick="this.select(0,this.value.length);" readonly /></p>
-						<p><?php _e('ex2.', $this->text_domain); ?><input name="" type="text" id="inputtext" value="http://capture.heartrails.com/100x100?%URL%" size="70" onclick="this.select(0,this.value.length);" readonly /></p>
+						<p><?php _e('ex2.', $this->text_domain); ?><input name="" type="text" id="inputtext" value="https://capture.heartrails.com/100x100?%URL%" size="70" onclick="this.select(0,this.value.length);" readonly /></p>
 					</td>
 				</tr>
 			</table>
@@ -933,6 +999,10 @@
 				<tr valign="top">
 					<th scope="row"><?php _e('Convert URL', $this->text_domain); ?></th>
 					<td><label><input name="properties[auto-url]" type="checkbox" id="check" value="1" <?php checked(isset($this->options['auto-url']) ? $this->options['auto-url'] : null, 1); ?> /><?php _e('Convert lines with URL only to Linkcard.', $this->text_domain); ?></label></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><?php _e('Only external link', $this->text_domain); ?></th>
+					<td><label><input name="properties[auto-external]" type="checkbox" id="check" value="1" <?php checked(isset($this->options['auto-external']) ? $this->options['auto-external'] : null, 1); ?> /><?php _e('Conversion only external link', $this->text_domain); ?></label></td>
 				</tr>
 
 				<tr valign="top">
@@ -1044,6 +1114,10 @@
 				<tr valign="top">
 					<th scope="row"><?php _e("Author's site", $this->text_domain); ?></th>
 					<td><?php echo __('Popozure.', $this->text_domain).' ('.__("Poporon's PC daily diary", $this->text_domain).')'; ?><BR><A href="https://popozure.info" target="_blank">https://popozure.info</A></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><?php _e("When in trouble", $this->text_domain); ?></th>
+					<td><?php echo __('Twitter account', $this->text_domain); ?><BR><A href="https://twitter.com/popozure" target="_blank">@popozure</A></td>
 				</tr>
 				<tr valign="top" style="display: none;">
 					<th scope="row"><?php _e("Donation", $this->text_domain); ?></th>

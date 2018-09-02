@@ -23,17 +23,18 @@ case 'use_post_id6':
 case 'sns_twitter':
 case 'sns_facebook':
 case 'sns_hatena':
+case 'sns_pocket':
 case 'regist':
 case 'sns_nexttime':
 	break;
 default:
 	$orderby	= 'regist';
-	$order		= 'DESC';
+	$order		= 'desc';
 }
 
-$order = strtoupper($order);
-if ($order != 'ASC' && $orderby == $orderby_now) {
-	$order = 'DESC';
+$order = strtolower($order);
+if ($order != 'asc' && $orderby == $orderby_now) {
+	$order = 'desc';
 }
 
 // 抽出条件
@@ -238,7 +239,7 @@ echo '</div>';
 					<th scope="col" class="excerpt"	style="min-width: 20em;">			<?php echo_THC('excerpt', __('Excerpt', $this->text_domain) ); ?></th>
 					<th scope="col" class="charset"	style="width: 4em; display: none;">	<?php echo_THC('charset', __('Charset', $this->text_domain) ); ?></th>
 					<th scope="col" class="domain"	style="min-width: 6em;">			<?php echo_THC('domain', __('Domain', $this->text_domain) ); ?></th>
-					<th scope="col" class="sns"		style="width: 2.5em;">				<?php echo_THC('sns_twitter', __('Tw', $this->text_domain)); echo '<br>'; echo_THC('sns_facebook', __('fb', $this->text_domain)); echo '<br>'; echo_THC('sns_hatena', __('B!', $this->text_domain)); ?></th>
+					<th scope="col" class="sns"		style="width: 2.5em;">				<?php echo_THC('sns_twitter', __('Tw', $this->text_domain)); echo '<br>'; echo_THC('sns_facebook', __('fb', $this->text_domain)); echo '<br>'; echo_THC('sns_hatena', __('B!', $this->text_domain)); echo '<br>'; echo_THC('sns_pocket', __('Po', $this->text_domain)); ?></th>
 					<th scope="col" class="regist"	style="width: 5em;">				<?php echo_THC('regist', __('Regist', $this->text_domain) ); ?></th>
 					<th scope="col" class="postid"	style="width: 3em;">				<?php echo_THC('use_post_id1', __('Post ID', $this->text_domain) ); ?></th>
 					<th scope="col" class="result"	style="width: 2.5em;">				<?php echo_THC('result_code', __('Result code', $this->text_domain) ); ?><br><?php echo_THC('alive_result', __('(last)', $this->text_domain) ); ?></th>
@@ -333,6 +334,8 @@ foreach ($data_all as $data) {
 	echo (($sns_count >= 0) ? numKM($sns_count) : '-').'<br>';
 	$sns_count = $data->sns_hatena;
 	echo (($sns_count >= 0) ? numKM($sns_count) : '-').'<br>';
+	$sns_count = $data->sns_pocket;
+	echo (($sns_count >= 0) ? numKM($sns_count) : '-').'<br>';
 	echo '</td>';
 
 	echo '	<td>'.$data->regist.'</td>';
@@ -391,16 +394,16 @@ function echo_THC($item, $text) {
 	$link_type		= isset($_REQUEST['link_type']		) ? $_REQUEST['link_type'] : null;
 
 	if ($item == $orderby) {
-		if ($order == 'DESC') {
+		if ($order == 'desc') {
 			$mark	= '▼';
-			$order	= 'ASC';
+			$order	= 'asc';
 		} else {
 			$mark	= '▲';
-			$order	= 'DESC';
+			$order	= 'desc';
 		}
 	} else {
 		$mark = '';
-		$order		= 'DESC';
+		$order		= 'desc';
 	}
 	echo '<a href="?page=pz-linkcard-cache&link_type='.$link_type.'&orderby='.$item.'&order='.$order.'&refine='.$refine.'&keyword='.$keyword.'">'.$text.$mark.'</a>';
 }

@@ -124,6 +124,7 @@ if (isset($action)) {
 					$after					=	$this->pz_GetCURL($data);
 					$data['alive_result']	=	$after['result_code'];
 					$data['alive_time']		=	$this->now;
+					$data['alive_nexttime']	=	$this->now + WEEK_IN_SECONDS * 4;
 					if	($data['title']		==	$after['title']) {
 						$data['mod_title']	=	0;
 					} else {
