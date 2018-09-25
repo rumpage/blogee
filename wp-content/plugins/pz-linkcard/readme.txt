@@ -163,6 +163,24 @@ A7.
 5. "Write shortcode and url"
 
 == Changelog ==
+Ver2.1.9
+* 相対URLを指定したときにサイトURLを補完する機能を追加しました。
+  Added: Added a function to supplement site URL when relative URL is specified.
+
+Ver2.1.8.4
+* サイト情報が「なし」の場合、「続きを読む」ボタンが表示されなかったのを修正しました。（Thanks Andrew）
+  Fixed: Fixed a bug that the `Read more` button is not displayed.
+
+Ver2.1.8.3
+* カード管理画面で警告エラーが発生していたのを修正しました。（Thanks @sayataro98）
+  Fixed: Fixed a bug.
+* 「続きを読む」ボタンが表示されなかったのを修正しました。（Thanks Andrew）
+  Fixed: Fixed a bug that the `Read more` button is not displayed.
+
+Ver2.1.8.2
+* 警告エラーが発生していたのを修正しました。
+  Fixed: Fixed a bug.
+
 Ver 2.1.8.1
 * フィルターの優先度を指定するように修正しました。
   Modified: Fix to specify filter priority.

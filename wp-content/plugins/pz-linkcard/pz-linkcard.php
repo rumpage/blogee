@@ -3,7 +3,7 @@
 Plugin Name: Pz-LinkCard
 Plugin URI: http://poporon.poponet.jp/pz-linkcard
 Description: リンクをカード形式で表示します。
-Version: 2.1.8.1
+Version: 2.1.9
 Author: poporon
 Author URI: http://poporon.poponet.jp
 License: GPLv2 or later
@@ -132,6 +132,7 @@ class Pz_LinkCard {
 			'flg-alive-count'	=>	null,
 			'flg-ssl'			=>	'1',
 			'flg-amp-url'		=>	null,
+			'flg-relative-url'	=>	null,
 			'flg-idn'			=>	'1',
 			'flg-anker'			=>	'1',
 			'flg-unlink'		=>	'1',
@@ -141,6 +142,7 @@ class Pz_LinkCard {
 			'flg-edit-insert'	=>	'1',
 			'flg-edit-qtag'		=>	'1',
 			'style-reset-img'	=>	'1',
+			'style'				=>	null,
 			'css-add'			=>	null,
 			'css-sp'			=>	null,
 			'css-file'			=>	null,
@@ -163,7 +165,7 @@ class Pz_LinkCard {
 			'invalid-time'		=>	null,
 			'plugin-link'		=>	null,
 			'plugin-name'		=>	'Pz-LinkCard',
-			'plugin-version'	=>	'2.1.8.1',
+			'plugin-version'	=>	'2.1.9',
 			'plugin-url'		=>	'https://popozure.info/pz-linkcard',
 			'pz-hbc-options'	=>	null,
 			'debug-time'		=>	null
@@ -327,6 +329,11 @@ class Pz_LinkCard {
 			}
 		}
 		$url_org		=	$url;							// 指定されたurlパラメータ
+		if ($this->options['flg-relative-url']) {
+			if (substr($url, 0, 1) == '/') {
+				$url	=	home_url() . $url;
+			}
+		}
 		$url			=	$this->pz_TrimURL( $url );		// URLエンティティ化など（無害化？）
 		if			( !$url ) {
 			if ($this->options['debug-time']) {
@@ -790,16 +797,16 @@ class Pz_LinkCard {
 			// HTMLタグ作成
 			switch (isset($this->options['info-position']) ? $this->options['info-position'] : null) {
 			case '1':
-				$tag = $wrap_op.$a_op_all.'<div class="lkc-card">'.$domain_info.'<div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div></div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card">'.$domain_info.'<div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 				break;
 			case '2':
-				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div></div>'.$domain_info.'<div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div>'.$domain_info.'<div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 				break;
 			case '3':
-				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.$domain_info.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.$url1.'</div><div class="lkc-excerpt">'.$excerpt.'</div></div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.$domain_info.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.$url1.'</div><div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 				break;
 			default:
-				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div></div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 			}
 		}
 		

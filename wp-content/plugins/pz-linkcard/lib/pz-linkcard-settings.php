@@ -1071,6 +1071,11 @@
 					<td><label><input name="properties[flg-idn]" type="checkbox" id="check" value="1" <?php checked( (isset($this->options['flg-idn']) && function_exists('idn_to_utf8') ) ? $this->options['flg-idn'] : null, 1); ?> /><?php _e('Convert domain name from IDNA ASCII to Unicode.', $this->text_domain); ?></label></td>
 				</tr>
 
+				<tr valign="top">
+					<th scope="row"><?php _e('Relative URL', $this->text_domain); ?></th>
+					<td><label><input name="properties[flg-relative-url]" type="checkbox" id="check" value="1" <?php checked(isset($this->options['flg-relative-url']) ? $this->options['flg-relative-url'] : null, 1); ?> /><?php _e('For relative-specified URLs, complement the site URL.', $this->text_domain); ?></label></td>
+				</tr>
+
 				<tr valign="top" style="display: none;">
 					<th scope="row"><?php _e('Display link to author page', $this->text_domain); ?></th>
 					<td><input name="properties[plugin-link]" type="checkbox" id="check" value="1" <?php checked(isset($this->options['plugin-link']) ? $this->options['plugin-link'] : null, 1); ?> disabled="disabled" /><a href="<?php echo $this->options['plugin-url']; ?>" target="_blank"><?php echo $this->options['plugin-name']; ?></a></td>
@@ -1130,10 +1135,10 @@
 </div>
 <?php
 	function pz_TrimNum($val, $zero = 0 ) {
-		$val		=	preg_replace('/[^0-9]/', '', $val) - 0;
+		$val		=	intval(preg_replace('/[^0-9]/', '', $val));
 		if ($val	==	0) {
 			$val	=	$zero;
-			$val	=	preg_replace('/[^0-9]/', '', $val) - 0;
+			$val	=	intval(preg_replace('/[^0-9]/', '', $val));
 		}
 		return	$val;
 	}

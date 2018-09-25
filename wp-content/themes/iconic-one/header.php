@@ -28,6 +28,19 @@
 <script src="<?php echo get_template_directory_uri(); ?>/js/html5.js" type="text/javascript"></script>
 <![endif]-->
 <?php wp_head(); ?>
+	
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-125252529-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-125252529-1');
+</script>
+	
+<meta name="google-site-verification" content="e79K-Qm0ZFEKy_-ZIlacPfHqeOlxc-p2fpHKiql-DSA" />
+	
 </head>
 <body <?php body_class(); ?>>
 <div id="page" class="site">

@@ -25,6 +25,10 @@
 		$this->options['thumbnail-url']	=	$thumbnail_url;
 		
 		// 暫定措置
+		if ($this->options['plugin-version'] < '2.1.1') {
+			$this->options['flg-edit-insert']	=	'1';
+			$this->options['flg-edit-qtag']		=	'1';
+		}
 		if ($this->options['plugin-version'] < '2.1.7') {
 			$this->options['flg-anker']		=	'1';
 		}

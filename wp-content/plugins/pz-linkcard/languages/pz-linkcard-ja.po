@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pz-LinkCard\n"
 "Report-Msgid-Bugs-To: http://wppolyglots.wordpress.com\n"
-"POT-Creation-Date: 2018-09-01 12:58+0900\n"
-"PO-Revision-Date: 2018-09-01 12:59+0900\n"
+"POT-Creation-Date: 2018-09-08 06:01+0900\n"
+"PO-Revision-Date: 2018-09-08 06:01+0900\n"
 "Last-Translator: \n"
 "Language-Team: poporon\n"
 "Language: ja_JP\n"
@@ -19,71 +19,71 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../pz-linkcard.php:343
+#: ../pz-linkcard.php:350
 msgid "Incorrect URL specification."
 msgstr ""
 
-#: ../pz-linkcard.php:1218
+#: ../pz-linkcard.php:1225
 msgid "Category"
 msgstr "カテゴリー"
 
-#: ../pz-linkcard.php:1218 ../pz-linkcard.php:1231
+#: ../pz-linkcard.php:1225 ../pz-linkcard.php:1238
 msgid "‘"
 msgstr "「"
 
-#: ../pz-linkcard.php:1218 ../pz-linkcard.php:1231
+#: ../pz-linkcard.php:1225 ../pz-linkcard.php:1238
 msgid "’"
 msgstr "」"
 
-#: ../pz-linkcard.php:1219 ../pz-linkcard.php:1232
+#: ../pz-linkcard.php:1226 ../pz-linkcard.php:1239
 msgid "("
 msgstr "（"
 
-#: ../pz-linkcard.php:1219 ../pz-linkcard.php:1232
+#: ../pz-linkcard.php:1226 ../pz-linkcard.php:1239
 msgid "Count"
 msgstr "件数"
 
-#: ../pz-linkcard.php:1219 ../pz-linkcard.php:1232
+#: ../pz-linkcard.php:1226 ../pz-linkcard.php:1239
 msgid ")"
 msgstr "）"
 
-#: ../pz-linkcard.php:1231
+#: ../pz-linkcard.php:1238
 msgid "Tag"
 msgstr "タグ"
 
-#: ../pz-linkcard.php:1624
+#: ../pz-linkcard.php:1631
 msgid "Linkcard"
 msgstr "リンクカード"
 
-#: ../pz-linkcard.php:1624
+#: ../pz-linkcard.php:1631
 msgid "Make Linkcard"
 msgstr "リンクカードのショートコードを挿入する"
 
-#: ../pz-linkcard.php:1632
+#: ../pz-linkcard.php:1639
 msgid "Invalid URL parameter in "
 msgstr "URLパラメーターの指定が無効です→"
 
-#: ../pz-linkcard.php:1663
+#: ../pz-linkcard.php:1670
 msgid "Pz LkC Cache"
 msgstr "Pz カード管理"
 
-#: ../pz-linkcard.php:1664
+#: ../pz-linkcard.php:1671
 msgid "Pz LinkCard"
 msgstr "Pz カード設定"
 
-#: ../pz-linkcard.php:1672 ../lib/pz-linkcard-cacheman.php:6
+#: ../pz-linkcard.php:1679 ../lib/pz-linkcard-cacheman.php:6
 msgid "LinkCard cache manager"
 msgstr "リンクカード／DBキャッシュ管理"
 
-#: ../pz-linkcard.php:1673 ../lib/pz-linkcard-settings.php:4
+#: ../pz-linkcard.php:1680 ../lib/pz-linkcard-settings.php:4
 msgid "LinkCard Settings"
 msgstr "リンクカード設定"
 
-#: ../pz-linkcard.php:1761
+#: ../pz-linkcard.php:1768
 msgid "Settings"
 msgstr "設定"
 
-#: ../pz-linkcard.php:1761
+#: ../pz-linkcard.php:1768
 msgid "Manage"
 msgstr "管理"
 
@@ -928,7 +928,7 @@ msgstr "はてなブログカードを利用する"
 msgid "External links will use Always HatenaBlogCard."
 msgstr "外部リンクは「はてなブログカード」を利用する"
 
-#: ../lib/pz-linkcard-settings.php:786 ../lib/pz-linkcard-settings.php:1097
+#: ../lib/pz-linkcard-settings.php:786 ../lib/pz-linkcard-settings.php:1102
 msgid "(Not recommended)"
 msgstr "（非推奨）"
 
@@ -1242,66 +1242,74 @@ msgstr ""
 "本語ドメインなど）"
 
 #: ../lib/pz-linkcard-settings.php:1075
+msgid "Relative URL"
+msgstr "相対指定URL"
+
+#: ../lib/pz-linkcard-settings.php:1076
+msgid "For relative-specified URLs, complement the site URL."
+msgstr "相対指定のURLの場合、サイトURLを補完します。"
+
+#: ../lib/pz-linkcard-settings.php:1080
 msgid "Display link to author page"
 msgstr "プラグイン名を表示する"
 
-#: ../lib/pz-linkcard-settings.php:1079
+#: ../lib/pz-linkcard-settings.php:1084
 msgid "Plugin URL"
 msgstr "プラグインページURL"
 
-#: ../lib/pz-linkcard-settings.php:1083
+#: ../lib/pz-linkcard-settings.php:1088
 msgid "Plugin name"
 msgstr "プラグイン名"
 
-#: ../lib/pz-linkcard-settings.php:1087
+#: ../lib/pz-linkcard-settings.php:1092
 msgid "Plugin version"
 msgstr "プラグインバージョン"
 
-#: ../lib/pz-linkcard-settings.php:1091
+#: ../lib/pz-linkcard-settings.php:1096
 msgid "Saved datetime"
 msgstr "保存した日時"
 
-#: ../lib/pz-linkcard-settings.php:1096
+#: ../lib/pz-linkcard-settings.php:1101
 msgid "Display elapsed time"
 msgstr "実行時間の表示"
 
-#: ../lib/pz-linkcard-settings.php:1097
+#: ../lib/pz-linkcard-settings.php:1102
 msgid "Output the elapsed time to HTML comment."
 msgstr "作成にかかった時間をコメントとしてHTMLへ出力する"
 
-#: ../lib/pz-linkcard-settings.php:1103
+#: ../lib/pz-linkcard-settings.php:1108
 msgid "Initialize"
 msgstr "初期化"
 
-#: ../lib/pz-linkcard-settings.php:1106
+#: ../lib/pz-linkcard-settings.php:1111
 msgid "Return to the initial setting"
 msgstr "設定を初期状態へ戻す"
 
-#: ../lib/pz-linkcard-settings.php:1112
+#: ../lib/pz-linkcard-settings.php:1117
 msgid "etc"
 msgstr "その他"
 
-#: ../lib/pz-linkcard-settings.php:1115
+#: ../lib/pz-linkcard-settings.php:1120
 msgid "Author's site"
 msgstr "作者のサイト"
 
-#: ../lib/pz-linkcard-settings.php:1116
+#: ../lib/pz-linkcard-settings.php:1121
 msgid "Popozure."
 msgstr "ぽぽづれ。"
 
-#: ../lib/pz-linkcard-settings.php:1116
+#: ../lib/pz-linkcard-settings.php:1121
 msgid "Poporon's PC daily diary"
 msgstr "ぽぽろんのパソコンつれづれ（ズレズレ？）日記"
 
-#: ../lib/pz-linkcard-settings.php:1119
+#: ../lib/pz-linkcard-settings.php:1124
 msgid "When in trouble"
 msgstr "困ったときは"
 
-#: ../lib/pz-linkcard-settings.php:1120
+#: ../lib/pz-linkcard-settings.php:1125
 msgid "Twitter account"
 msgstr "ツイッター アカウント"
 
-#: ../lib/pz-linkcard-settings.php:1123
+#: ../lib/pz-linkcard-settings.php:1128
 msgid "Donation"
 msgstr "寄付"
 
