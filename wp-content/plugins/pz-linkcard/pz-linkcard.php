@@ -800,13 +800,13 @@ class Pz_LinkCard {
 				$tag = $wrap_op.$a_op_all.'<div class="lkc-card">'.$domain_info.'<div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.do_shortcode($title).'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 				break;
 			case '2':
-				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div>'.$domain_info.'<div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.do_shortcode($title).'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div>'.$domain_info.'<div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 				break;
 			case '3':
-				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.$domain_info.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.$url1.'</div><div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.$domain_info.'<div class="lkc-title"><span class="lkc-title-text">'.do_shortcode($title).'</span>'.$a_cl.$sns_title.$url1.'</div><div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 				break;
 			default:
-				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.do_shortcode($title).'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 			}
 		}
 
