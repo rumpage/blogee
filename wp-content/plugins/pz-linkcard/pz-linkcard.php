@@ -174,39 +174,39 @@ class Pz_LinkCard {
 	public function __construct() {
 		$this->slug				=	basename(dirname(__FILE__));
 		$this->text_domain		=	$this->slug;
-		
+
 		$this->charset			=	get_bloginfo('charset');
-		
+
 		$this->amp				=	'1';
-		
+
 		$this->now				=	current_time('timestamp', false);
 		$this->now_mysql		=	current_time('mysql');
-		
+
 		$this->plugin_basename	=	plugin_basename(__FILE__);
 		$this->plugin_dir_path	=	plugin_dir_path(__FILE__);
 		$this->plugin_dir_url	=	plugin_dir_url (__FILE__);
-		
+
 		$this->options = get_option('Pz_LinkCard_options', $this->defaults );
 		foreach ($this->defaults as $key => $value) {
 			if (!isset($this->options[$key])) {
 				$this->options[$key] = null;
 			}
 		}
-		
+
 		// DB
 		global $wpdb;
 		$this->db_name			= $wpdb->prefix.'pz_linkcard';
-		
+
 		// バージョンが違っていたら、DBとオプションを更新する
 		if ($this->options['plugin-version'] <> $this->defaults['plugin-version']) {
 			$this->activate();
 		}
-		
+
 		// CSS URLが空だったら生成
 		if (!$this->options['css-url']) {
 			$this->pz_SetStyle();
 		}
-		
+
 		// ショートコードの設定
 		if ($this->options['auto-atag'] || $this->options['auto-url']) {
 			add_filter		('the_content',					array($this, 'auto_replace'), 10 );	// 自動置き換え
@@ -224,10 +224,10 @@ class Pz_LinkCard {
 		if ($this->options['code4']) {
 			add_shortcode($this->options['code4'], array($this, 'shortcode'));
 		}
-		
+
 		// 日本語化
 		load_plugin_textdomain		($this->text_domain, false, $this->slug.'/languages');
-		
+
 		// 管理画面のとき
 		if (is_admin()) {
 			register_activation_hook	(__FILE__,							array($this, 'activate') );			// 有効化したときの処理
@@ -239,7 +239,7 @@ class Pz_LinkCard {
 			add_filter		('mce_buttons',									array($this, 'add_mce_button') );	// ビジュアルエディタ用ボタン
 			add_filter		('mce_external_plugins',						array($this, 'add_mce_plugin') );	// ビジュアルエディタ用ボタン
 			add_filter		('plugin_action_links_'.$this->plugin_basename,	array($this, 'action_links') );		// プラグイン画面
-			
+
 			if (!$this->options['style']) {
 				if (!isset($this->options['css-path']) || !file_exists($this->options['css-path'])) {
 					$this->pz_SetStyle();
@@ -253,10 +253,10 @@ class Pz_LinkCard {
 			}
 			add_action('wp_enqueue_scripts', array($this, 'enqueue'));
 		}
-		
+
 		add_action( 'pz_linkcard_check', array( $this, 'schedule_hook_check' ) );
 		add_action( 'pz_linkcard_alive', array( $this, 'schedule_hook_alive' ) );
-		
+
 		if (!wp_next_scheduled('pz_linkcard_check')) {
 			wp_schedule_event		( time() + 10	, 'hourly',	'pz_linkcard_check');
 		}
@@ -308,7 +308,7 @@ class Pz_LinkCard {
 			echo	PHP_EOL.'<!-- Pz-LkC [Debug mode: On] /-->'.PHP_EOL;
 			echo	'<!-- Pz-LkC [Shortcode] /-->'.PHP_EOL;
 		}
-		
+
 		// URL
 		$url			=	'';
 		if				(isset( $atts['url'] ) ) {
@@ -350,10 +350,10 @@ class Pz_LinkCard {
 			return '<a name="pz-lkc-error"></a><div class="lkc-error"><div class="lkc-card"><div class="lkc-this-wrap"><div class="lkc-excerpt">'.$this->slug.': '.__('Incorrect URL specification.', $text_domain).'(url='.html_entity_decode($url_org).')'.PHP_EOL.'<!-- '.html_entity_decode(print_r($atts, true)).' /-->'.PHP_EOL.'</div></div></div></div>';
 		}
 		$atts['url']	=	$url;
-		
+
 		// titleパラメータ
 		$s_title		=	isset($atts['title'] ) ? $atts['title'] : null;
-		
+
 		// contentパラメータ
 		if				(isset($atts['content'] ) ) {
 			$s_excerpt	=	$atts['content'];
@@ -364,7 +364,7 @@ class Pz_LinkCard {
 		} else {
 			$s_excerpt	=	null;
 		}
-		
+
 		// 囲まれ文字（ショートコード1のみ有効）
 		if ($shortcode == $this->options['code1']) {
 			switch (isset($this->options['use-inline']) ? $this->options['use-inline'] : null) {
@@ -376,17 +376,17 @@ class Pz_LinkCard {
 				break;
 			}
 		}
-		
+
 		// 記事内容取得
 		$data	= $this->pz_GetHTML ( $atts );
-		
+
 		// 実行時間
 		if ($this->options['debug-time']) {
 			$end_time		= microtime(true);
 			$elasped_time	= number_format($end_time - $start_time, 8, '.', ',');
 			echo	'<!-- Pz-LkC [ElaspedTime='.$elasped_time.'sec] /-->'.PHP_EOL;
 		}
-		
+
 		return	$data;
 	}
 
@@ -395,7 +395,7 @@ class Pz_LinkCard {
 		if ($this->options['debug-time']) {
 			echo	'<!-- Pz-LkC [GetHTML] /-->'.PHP_EOL;
 		}
-		
+
 		// モバイルチェック
 		if (function_exists('wp_is_mobile') && wp_is_mobile()) {
 			$is_mobile		= true;
@@ -405,7 +405,7 @@ class Pz_LinkCard {
 		if ($this->options['debug-time']) {
 			echo	'<!-- Pz-LkC [MOBILE='.$is_mobile.'] /-->'.PHP_EOL;
 		}
-		
+
 		$url			= $atts['url'];
 		if (!isset($url) || $url == '' ) {
 			return null;
@@ -413,17 +413,17 @@ class Pz_LinkCard {
 		if ($this->options['debug-time']) {
 			echo	'<!-- Pz-LkC [URL='.$url.'] /-->'.PHP_EOL;
 		}
-		
+
 		// URLパース（ドメイン名などを抽出）
 		$url_m			=	parse_url( $url );
 		$scheme			=	$url_m['scheme'];						// スキーム
 		$domain			=	$url_m['host'];							// ドメイン名
 		$domain_url		=	$scheme.'://'.$url_m['host'];			// ドメインURL
 		$location		=	substr($url, mb_strlen($domain_url));	// ドメイン名以降
-		
+
 		// 自サイトチェック
 		$link_type		=	$this->Pz_LinkType($url);
-		
+
 		// モバイルかPCかのクラス名を追加
 		$class_id		= 'linkcard';
 		if ($is_mobile && $this->options['class-mobile']) {
@@ -431,7 +431,7 @@ class Pz_LinkCard {
 		} elseif ($this->options['class-pc']) {
 			$class_id .= ' '.$this->options['class-pc'];
 		}
-		
+
 		// キャッシュから取得
 		$data_id		= null;
 		$data			= array();
@@ -445,7 +445,7 @@ class Pz_LinkCard {
 		if ($this->options['debug-time']) {
 			echo	'<!-- Pz-LkC [CACHE='.$data_id.'] /-->'.PHP_EOL;
 		}
-		
+
 		// 内部リンクの処理
 		if ( $link_type ) {
 			// リンクターゲットの設定
@@ -456,7 +456,7 @@ class Pz_LinkCard {
 				}
 			}
 			$nofollow		= '';					// 内部サイトにnoflollowは付けない
-			
+
 			// キャッシュが無い、もしくは強制取得
 			if ( is_null($data_id) || ( isset($atts['force']) && $atts['force'] == true ) ) {
 				if ($this->options['debug-time']) {
@@ -476,7 +476,7 @@ class Pz_LinkCard {
 				$data['link_type']	=	1;
 			}
 		}
-		
+
 		// 外部リンクの処理
 		if ( !$link_type ) {
 			// リンクターゲットの設定
@@ -487,7 +487,7 @@ class Pz_LinkCard {
 				}
 			}
 			$nofollow		= isset($this->options['nofollow']) ? ' rel="nofollow"' : '';	// nofollow指定。趣味の問題？
-			
+
 			// キャッシュが無い、もしくは強制取得
 			if ( is_null($data_id) || ( isset($atts['force']) && $atts['force'] == true ) ) {
 				if ($this->options['debug-time']) {
@@ -501,7 +501,7 @@ class Pz_LinkCard {
 				}
 			}
 		}
-		
+
 		// 念のため初期化
 		$data_id		= (isset($data['id'])			? $data['id'] : null);
 		$site_name		= (isset($data['site_name'])	? $data['site_name'] : null);
@@ -515,10 +515,10 @@ class Pz_LinkCard {
 		$sns_hb			= (isset($data['sns_hatena'])	? $data['sns_hatena'] : null);
 		$sns_po			= (isset($data['sns_pocket'])	? $data['sns_pocket'] : null);
 		$alive_result	= (isset($data['alive_result'])	? $data['alive_result'] : null);
-		
+
 		$thumbnail		= null;
 		$favicon		= null;
-		
+
 		// ラッピング
 		switch ($link_type) {
 		case '1':
@@ -549,7 +549,7 @@ class Pz_LinkCard {
 			$sw_favicon		=	isset($this->options['ex-favicon'])	? $this->options['ex-favicon']		: '0' ;
 			break;
 		}
-		
+
 		// 外部リンクの処理
 		if ( !$link_type && isset($this->options['use-hatena']) && !is_null($this->options['use-hatena'] ) ) {
 			// 「はてなブログカード」をそのまま利用する
@@ -561,7 +561,7 @@ class Pz_LinkCard {
 			}
 			return $tag;		// タグを出力してさっさと終了
 		}
-		
+
 		// サムネイル取得
 		if ( !$this->options['thumbnail-position'] || ( $result_code <> 0 && $result_code <> 200 ) ) {
 			$thumbnail = null;
@@ -586,7 +586,7 @@ class Pz_LinkCard {
 				}
 			}
 		}
-		
+
 		// ファビコン取得
 		if (!isset($this->options['info-position'])) {
 			$favicon = null;
@@ -608,12 +608,12 @@ class Pz_LinkCard {
 				}
 			}
 		}
-		
+
 		// タイトル
 		if (!isset($title) || $title == '') {
 			$title		= esc_html($url);					// タイトル取得できていなかったらURLをセットする
 		}
-		
+
 		// パラメータ取得（タイトル・抜粋文）
 		if (isset($atts['title'])) {						// titleパラメータ
 			$title			=	$atts['title'];
@@ -628,7 +628,7 @@ class Pz_LinkCard {
 				$excerpt	=	$atts['description'];
 			}
 		}
-		
+
 		// タイトル整形
 		if (isset($title)) {
 			$str	= $title;
@@ -638,7 +638,7 @@ class Pz_LinkCard {
 			$str	= mb_strimwidth($str, 0, (isset($this->options['trim-title']) ? $this->options['trim-title'] : $this->defaults['trim-title'] ) , '...');
 			$title	= $str;
 		}
-		
+
 		// 抜粋文整形（抜粋文非表示の場合、空欄にする）
 		if (!isset($this->options['display-excerpt']) || is_null($this->options['display-excerpt'])) {
 			$excerpt = '';
@@ -654,7 +654,7 @@ class Pz_LinkCard {
 				$excerpt	= $str;
 			}
 		}
-		
+
 		// サイト名称を使わない場合、ドメイン名で上書き
 		$site_title = '';
 		if ((isset($this->options['use-sitename']) ? $this->options['use-sitename'] : null) && $site_name) {
@@ -674,7 +674,7 @@ class Pz_LinkCard {
 				}
 			}
 		}
-		
+
 		// リンク先URL
 		if ( (isset($this->options['flg-unlink']) ? true : false) && (array_search($alive_result, array('403','404','410'))) ) {
 			// Not found の時は見え消ししてリンクしない
@@ -701,7 +701,7 @@ class Pz_LinkCard {
 			$st_op		= '';
 			$st_cl		= '';
 		}
-		
+
 		// ソーシャルカウントの表示
 		$sns		= null;
 		$sns_info	= null;
@@ -745,12 +745,12 @@ class Pz_LinkCard {
 				}
 			}
 		}
-		
+
 		// サムネイル
 		if ($thumbnail) {
 			$thumbnail = '<span class="lkc-thumbnail">'.$thumbnail.'</span>';
 		}
-		
+
 		// 日本語ドメイン対応
 		if (isset($this->options['flg-idn']) ? true : false) {
 			if (function_exists('idn_to_utf8')) {
@@ -759,14 +759,14 @@ class Pz_LinkCard {
 				}
 			}
 		}
-		
+
 		// 続きを読むボタン
 		if ( $more && $more_text ) {
 			$moretag	=	'<div class="lkc-more">'.$a_op.'<span class="lkc-more-text">'.$more_text.'</span>'.$a_cl.'</div>';
 		} else {
 			$moretag	=	'';
 		}
-		
+
 		// リンク先URL
 		$url1			=	'';
 		$url2			=	'';
@@ -777,7 +777,7 @@ class Pz_LinkCard {
 				$url1	=	'<div class="lkc-url"><cite>'.$st_op.$a_op.$url.$st_cl.$a_cl.'</cite></div>';
 			}
 		}
-		
+
 		// サイト情報
 		if ($info) {
 			$added_info	=	'<span class="lkc-added">'.$info.'</span>';
@@ -785,10 +785,10 @@ class Pz_LinkCard {
 			$added_info	=	'';
 		}
 		$domain_info	=	'<div class="lkc-info">'.$a_op.'<span class="lkc-domain"'.$site_title.'>'.$favicon.'&nbsp;'.$site_name.'</span>'.$added_info.$a_cl.$sns_info.$url2.'</div>';
-		
+
 		// 記事内容
 		//$content = '<div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div>';
-		
+
 		// Google AMPに対応
 		if ( (function_exists('is_amp_endpoint') && is_amp_endpoint()) || isset($this->amp) || ( isset($this->options['flg-amp-url']) && ( preg_match('/\/amp\/?$/i', $_SERVER["REQUEST_URI"]) || preg_match('/\?amp=1$/i', $_SERVER["REQUEST_URI"]) ) ) ) {
 			// 簡易タグ作成
@@ -797,7 +797,7 @@ class Pz_LinkCard {
 			// HTMLタグ作成
 			switch (isset($this->options['info-position']) ? $this->options['info-position'] : null) {
 			case '1':
-				$tag = $wrap_op.$a_op_all.'<div class="lkc-card">'.$domain_info.'<div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
+				$tag = $wrap_op.$a_op_all.'<div class="lkc-card">'.$domain_info.'<div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.do_shortcode($title).'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 				break;
 			case '2':
 				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div>'.$domain_info.'<div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
@@ -809,14 +809,14 @@ class Pz_LinkCard {
 				$tag = $wrap_op.$a_op_all.'<div class="lkc-card"><div class="lkc-content">'.$a_op.$thumbnail.'<div class="lkc-title"><span class="lkc-title-text">'.$title.'</span>'.$a_cl.$sns_title.'</div>'.$url1.'<div class="lkc-excerpt">'.$excerpt.'</div>'.$moretag.'</div><div class="clear"></div></div>'.$a_cl_all.$wrap_cl;
 			}
 		}
-		
+
 		// 引用文扱い
 		if (isset($this->options['blockquote']) ? $this->options['blockquote'] : null == '1') {
 			$tag = '<div class="'.$class_id.'"><blockquote class="lkc-quote">'.$tag.'</blockquote></div>';
 		} else {
 			$tag = '<div class="'.$class_id.'">'.$tag.'</div>';
 		}
-		
+
 		return $tag;
 	}
 
@@ -826,7 +826,7 @@ class Pz_LinkCard {
 			$url = null;
 			return $url;
 		}
-		
+
 		$url	= html_entity_decode($url);
 		if ($this->options['debug-time']) {
 			echo	'<!-- Pz-LkC [URL1='.$url.'] /-->'.PHP_EOL;
@@ -853,7 +853,7 @@ class Pz_LinkCard {
 		if ($this->options['debug-time']) {
 			echo	'<!-- Pz-LkC [URL4='.$url.'] /-->'.PHP_EOL;
 		}
-		
+
 		return	$url;
 	}
 
@@ -916,24 +916,24 @@ class Pz_LinkCard {
 		if (!isset($data) || !is_array($data)) {
 			return null;
 		}
-		
+
 		$data = $this->pz_GetCache($data);
 		if (!isset($data) || !is_array($data)) {
 			return null;
 		}
-		
+
 		// ソーシャルカウント
 		$sns_renew	= false;
 		$update_cnt	= false;
-		
+
 		// タイムオーバー
 		$opt = array( 'timeout' => 30 );
-		
+
 		// 保存期間満了でソーシャルカウントをリセット
 		if ($this->now > $data['sns_nexttime'] && $data['result_code'] <= 200 ) {
 			$sns_renew		= true;
 		}
-		
+
 		// Twitter count.json 2015/11/21 非公式サービス終了に伴い停止→代替APIへ変更
 		if (isset($this->options['sns-tw']) && !is_null($this->options['sns-tw'])) {
 			$count_before = isset($data['sns_twitter']) ? $data['sns_twitter'] : -1;
@@ -949,7 +949,7 @@ class Pz_LinkCard {
 				}
 			}
 		}
-		
+
 		if (isset($this->options['sns-fb']) && !is_null($this->options['sns-fb'])) {
 			$count_before = intval(isset($data['sns_facebook']) ? $data['sns_facebook'] : -1);
 			if ($sns_renew || $count_before < 0) {
@@ -964,7 +964,7 @@ class Pz_LinkCard {
 				}
 			}
 		}
-		
+
 		if (isset($this->options['sns-hb']) && !is_null($this->options['sns-hb'])) {
 			$count_before = isset($data['sns_hatena']) ? $data['sns_hatena'] : -1;
 			if ($sns_renew || $count_before < 0) {
@@ -978,7 +978,7 @@ class Pz_LinkCard {
 				}
 			}
 		}
-		
+
 		if (isset($this->options['sns-po']) && !is_null($this->options['sns-po'])) {
 			$count_before = isset($data['sns_pocket']) ? $data['sns_pocket'] : -1;
 			if ($sns_renew || $count_before < 0) {
@@ -993,7 +993,7 @@ class Pz_LinkCard {
 				}
 			}
 		}
-		
+
 		// 登録してから一週間までは毎日、それ以降は週一回更新（取得が固まらないようにランダム時間付与）
 		if ($update_cnt || ($this->now - strtotime($data['regist']) < WEEK_IN_SECONDS)) {
 			$sns_nexttime = $this->now + DAY_IN_SECONDS + rand(0, DAY_IN_SECONDS);	// 1day + 0-24h
@@ -1004,7 +1004,7 @@ class Pz_LinkCard {
 		// HOUR_IN_SECONDS		= 60	*	MINUTE_IN_SECONDS	= 3600
 		// DAY_IN_SECONDS		= 24	*	HOUR_IN_SECONDS		= 86400
 		// WEEK_IN_SECONDS		= 7		*	DAY_IN_SECONDS		= 604800
-		// YEAR_IN_SECONDS		= 365	*	DAY_IN_SECONDS		
+		// YEAR_IN_SECONDS		= 365	*	DAY_IN_SECONDS
 
 		global	$wpdb;
 		$wpdb->update(
@@ -1063,7 +1063,7 @@ class Pz_LinkCard {
 		if (!isset($data['url_key']) || is_null($data['url_key']) || $data['url_key'] == '' ) {
 			$data['url_key']	= hash( 'sha256', esc_url( $url ), true);
 		}
-		
+
 		if (!$data['regist_result']) {					// 最初登録時情報
 			$data['regist_title']	=	$data['title'];
 			$data['regist_excerpt']	=	$data['excerpt'];
@@ -1072,7 +1072,7 @@ class Pz_LinkCard {
 			$data['regist_time']	=	$this->now;
 		}
 		$data['uptime']				=	$this->now;		// 最終更新日時
-		
+
 		// 更新してみる
 		if ( isset($data['id']) ) {
 			$result = $wpdb->update(
@@ -1150,7 +1150,7 @@ class Pz_LinkCard {
 	public function pz_GetPost( $data ) {
 		// サイト名取得
 		$site_name				= get_bloginfo('name');
-		
+
 		// ドメイン名
 		if (preg_match('/https?:\/\/(.*)\//i', home_url().'/',$m)) {
 			$domain_url	= $m[0];
@@ -1159,25 +1159,25 @@ class Pz_LinkCard {
 			$domain_url	= null;
 			$domain		= null;
 		}
-		
+
 		// サイトアイコン
 		if (function_exists('has_site_icon') && has_site_icon()) {
 			$favicon		=	get_site_icon_url(16, '', 0);
 		} else {
 			$favicon		=	null;
 		}
-		
+
 		$title					=	null;
 		$excerpt				=	null;
 		$thumbnail				=	null;
-		
+
 		// 記事内容
 		$url					=	$data['url'];
 		$post_id				=	url_to_postid($url );				// 記事IDを取得
 		if ($this->options['debug-time']) {
 			echo	'<!-- Pz-LkC [PID='.$post_id.'] /-->'.PHP_EOL;
 		}
-		
+
 		if ( !$post_id && isset($this->options['flg-get-pid']) ? true : false) {
 			$url				=	$this->Pz_GetRedirURL( $data );		// 本当の記事URLを取得
 			$post_id			=	url_to_postid($url );				// 記事IDを取得
@@ -1185,7 +1185,7 @@ class Pz_LinkCard {
 				echo	'<!-- Pz-LkC [PID='.$post_id.'(REDIR)] /-->'.PHP_EOL;
 			}
 		}
-		
+
 		if	( $post_id ) {
 			$result_code		=	200;						// 外部取得と同じコードをセット
 			$post				=	get_post($post_id);			// 記事情報
@@ -1213,7 +1213,7 @@ class Pz_LinkCard {
 			$site_name			= get_bloginfo('name');
 			$thumbnail			= '';
 			$result_code		= '404';
-			
+
 			// カテゴリ ページの処理
 			$cat_dir			=	get_option('category_base');
 			$cat_url			=	home_url().'/'.($cat_dir ? $cat_dir : 'category').'/';
@@ -1248,7 +1248,7 @@ class Pz_LinkCard {
 				}
 			}
 		}
-		
+
 		// タイトル整形
 		if (isset($title)) {
 			$str	= $title;
@@ -1258,7 +1258,7 @@ class Pz_LinkCard {
 			$str	= mb_strimwidth($str, 0, 200, '...');				// 保管用のタイトルは200文字で切る
 			$title	= $str;
 		}
-		
+
 		// 抜粋文整形
 		if (isset($excerpt)) {
 			$str	= $excerpt;
@@ -1270,14 +1270,14 @@ class Pz_LinkCard {
 			$str	= mb_strimwidth($str, 0, 500, '...');				// 保管用の記事内容は500文字で切る
 			$excerpt	= $str;
 		}
-		
+
 		// URLパース（ドメイン名などを抽出）
 		$url_m			=	parse_url( $url );
 		$scheme			=	$url_m['scheme'];							// スキーム
 		//$domain			=	$url_m['host'];								// ドメイン名
 		//$domain_url		=	$scheme.'://'.$url_m['host'];				// ドメインURL
 		$location		=	substr($url, mb_strlen($domain_url));		// ドメイン名以降
-		
+
 		// データセット
 		if		($data['title']		==	$title ) {
 			$before['mod_title']	=	0;
@@ -1303,7 +1303,7 @@ class Pz_LinkCard {
 		$data['result_code']		=	$result_code;
 		$data['alive_result']		=	$result_code;
 		$data['favicon']			=	$favicon;
-		
+
 		return $data;
 	}
 
@@ -1340,25 +1340,25 @@ class Pz_LinkCard {
 		if (!isset( $url ) || $url == '') {
 			return null;
 		}
-		
+
 		// リンク先サイト取得
 		$html					= null;
 		$error					= true;
-		
+
 		$domain					= null;
 		$site_name				= null;
 		$title					= null;
 		$excerpt				= null;
 		$charset				= null;
 		$result_code			= null;
-		
+
 		// URLパース（ドメイン名などを抽出）
 		$url_m			=	parse_url( $url );
 		$scheme			=	$url_m['scheme'];							// スキーム
 		$domain			=	$url_m['host'];								// ドメイン名
 		$domain_url		=	$scheme.'://'.$url_m['host'];				// ドメインURL
 		$location		=	substr($url, mb_strlen($domain_url));		// ドメイン名以降
-		
+
 		if ( function_exists( 'curl_init' ) ) {							// cURLを使用する
 			$result_code	= 0;
 			$ch				= curl_init($url);
@@ -1405,7 +1405,7 @@ class Pz_LinkCard {
 				$error			=	false;
 			}
 		}
-		
+
 		// 文字コード判定
 		$charset	= null;
 		if ($html <> '') {
@@ -1427,7 +1427,7 @@ class Pz_LinkCard {
 			} elseif ($this->charset <> $charset) {
 				$html = mb_convert_encoding($html, $this->charset, $charset);
 			}
-			
+
 			// HEADタグ（METAタグ解析）
 			$head		= null;
 			$tags		= null;
@@ -1435,7 +1435,7 @@ class Pz_LinkCard {
 				$head	= $m[1];
 				$tags	= $this->pz_GetMeta($head);
 			}
-			
+
 			// タイトル
 			if			(isset(	$tags['og:title']				)	&&	$tags['og:title']		) {
 				$title		=	$tags['og:title']				;
@@ -1444,7 +1444,7 @@ class Pz_LinkCard {
 			} elseif	(isset(	$tags['title']					)	&&	$tags['title']			) {
 				$title		=	$tags['title']					;
 			}
-			
+
 			// 抜粋文・概要文
 			if			(isset(	$tags['og:description']			)	&& $tags['og:description']	) {
 				$excerpt	=	$tags['og:description']			;
@@ -1453,7 +1453,7 @@ class Pz_LinkCard {
 			} elseif	(isset(	$tags['description']			)	&& $tags['description']		) {
 				$excerpt	=	$tags['description']			;
 			}
-			
+
 			// OGPから画像URL取得
 			if			(isset(	$tags['og:image']				)	&& $tags['og:image']		) {
 				$thumbnail_url = $tags['og:image']				;
@@ -1463,7 +1463,7 @@ class Pz_LinkCard {
 			if			($thumbnail_url	&& !preg_match('/^https*:\/\//', $thumbnail_url, $m) ) {
 				$thumbnail_url	=	$this->pz_RelToURL($url, $thumbnail_url);
 			}
-			
+
 			// OGPからサイトアイコンURL取得
 			if			(isset(	$tags['icon']					)	&& $tags['icon']			) {
 				$favicon_url = $tags['icon']					;
@@ -1475,12 +1475,12 @@ class Pz_LinkCard {
 			if			($favicon_url	&& !preg_match('/^https*:\/\//', $favicon_url, $m) ) {
 				$favicon_url	=	$this->pz_RelToURL($url, $favicon_url);
 			}
-			
+
 			// サイト名
 			if			(isset(	$tags['og:site_name']	)	&& $tags['og:site_name']	) {
 				$site_name	=	$tags['og:site_name']	;
 			}
-			
+
 			// タイトル整形
 			if (isset($title)) {
 				$str	= $title;
@@ -1490,7 +1490,7 @@ class Pz_LinkCard {
 				$str	= mb_strimwidth($str, 0, 200, '...');				// 保管用のタイトルは200文字で切る
 				$title	= $str;
 			}
-			
+
 			// 抜粋文整形
 			if (isset($excerpt)) {
 				$str	= $excerpt;
@@ -1500,7 +1500,7 @@ class Pz_LinkCard {
 				$str	= mb_strimwidth($str, 0, 500, '...');				// 保管用の記事内容は500文字で切る
 				$excerpt	= $str;
 			}
-			
+
 			// データセット
 			if (isset($data_id) && !is_null($data_id)) {
 				$data['id']			= $data_id;
@@ -1545,12 +1545,12 @@ class Pz_LinkCard {
 			$tags = null;
 			$tags = array('none' => 'none');
 		}
-		
+
 		// TITLEタグ
 		if (preg_match('/<\s*title\s*[^>]*>\s*([^<]*)\s*<\s*\/title\s*[^>]*>/si', $html, $m)) {
 			$tags['title'] = esc_html($m[1]);
 		}
-		
+
 		// metaタグ パース
 		$match = null;
 		preg_match_all('/<\s*meta\s(?=[^>]*?\b(?:name|property)\s*=\s*(?|"\s*([^"]*?)\s*"|\'\s*([^\']*?)\s*\'|([^"\'>]*?)(?=\s*\/?\s*>|\s\w+\s*=)))[^>]*?\bcontent\s*=\s*(?|"\s*([^"]*?)\s*"|\'\s*([^\']*?)\s*\'|([^"\'>]*?)(?=\s*\/?\s*>|\s\w+\s*=))[^>]*>/is', $html, $match);
@@ -1561,7 +1561,7 @@ class Pz_LinkCard {
 			unset($m);
 			$tags += array_combine($match[1], $match[2]);
 		}
-		
+
 		// linkタグ パース
 		$match = null;
 		preg_match_all('/<\s*link\s(?=[^>]*?\brel\s*=\s*(?|"\s*([^"]*?)\s*"|\'\s*([^\']*?)\s*\'|([^"\'>]*?)(?=\s*\/?\s*>|\s\w+\s*=)))[^>]*?\bhref\s*=\s*(?|"\s*([^"]*?)\s*"|\'\s*([^\']*?)\s*\'|([^"\'>]*?)(?=\s*\/?\s*>|\s\w+\s*=))[^>]*>/is', $html, $match);
@@ -1572,7 +1572,7 @@ class Pz_LinkCard {
 			unset($m);
 			$tags += array_combine($match[1], $match[2]);
 		}
-		
+
 		return $tags;
 	}
 
@@ -1581,26 +1581,26 @@ class Pz_LinkCard {
 		if (!isset($url) || $url == '' || $url == 'https://s0.wp.com/i/blank.jpg') {
 			return null;
 		}
-		
+
 		$file_dir	= $this->options['thumbnail-dir'];						// サムネイルのディレクトリ
 		if (!is_dir($file_dir)) {
 			return null;
 		}
-		
+
 		$file_name	= bin2hex(hash('sha256', esc_url( $url ), true));		// URLをハッシュしてファイル名を生成する
 		$file_path	= $file_dir.$file_name;									// ファイルのフルパス
 		$file_url	= $this->options['thumbnail-url'].$file_name;			// 画像URL
-		
+
 		if (!$force && file_exists($file_path )) {							// 既にあれば画像URLを返す
 			return $file_url;
 		}
-		
+
 		list($width, $height) = @getimagesize($url);						// サイズを取得
 		if (!isset($width) || !isset($height) || $width < 8 || $height < 8) {	// 8x8未満は画像ではないと見なす
 			return null;
 		}
 		$image = imagecreatefromstring( file_get_contents($url) );			// 画像読み込み
-		
+
 		$new_width  = 200;													// 幅200px
 		$new_height = 200;													// 高さ200px
 		if ($width <> $height) {											// 正方形でない
@@ -1655,7 +1655,7 @@ class Pz_LinkCard {
 	// 通常時のスタイルシート
 	public function enqueue($hook) {
 		$this->amp				=	null;
-		
+
 		if (!isset($this->options['style'])) {
 			wp_enqueue_style	('pz-linkcard', $this->options['css-url']);
 		} else {
@@ -1685,7 +1685,7 @@ class Pz_LinkCard {
 		if (!isset($this->options['sns-position']) || $this->options['sns-position'] == '') {
 			return null;
 		}
-		
+
 		global $wpdb;
 		$result	= (array) $wpdb->get_results($wpdb->prepare("SELECT url,sns_nexttime FROM $this->db_name WHERE sns_nexttime<%d ORDER BY sns_nexttime ASC", $this->now));
 		$i		= 0;
@@ -1708,7 +1708,7 @@ class Pz_LinkCard {
 		if (!isset($this->options['flg-alive']) || $this->options['flg-alive'] == '') {
 			return null;
 		}
-		
+
 		global $wpdb;
 		$result	= (array) $wpdb->get_results($wpdb->prepare("SELECT url,alive_time FROM $this->db_name WHERE alive_nexttime<%d ORDER BY alive_time ASC, id ASC", $this->now - WEEK_IN_SECONDS ));
 		$i		= 0;
@@ -1757,7 +1757,7 @@ class Pz_LinkCard {
 	public function page_cacheman() {
 		require_once ('lib/pz-linkcard-cacheman.php');
 	}
-	
+
 	// Pz カード 設定画面
 	public function page_settings() {
 		require_once ('lib/pz-linkcard-settings.php');
