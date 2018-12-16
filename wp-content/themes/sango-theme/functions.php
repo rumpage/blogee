@@ -336,6 +336,55 @@ function sng_register_sidebars() {
   ));
 
 } //END sng_register_sidebars
+
+// get_id_val関数の定義
+function get_id_val() {
+  // パラメーター「id」の値を取得
+  $val = (isset($_GET['key']) && $_GET['key'] != '') ? $_GET["key"] : '';
+  // エスケープ処理
+  $val = htmlspecialchars($val, ENT_QUOTES);
+
+  // $valを戻り値として設定（ショートコードの値となる）
+  return $val;
+}
+
+// ショートコード[id]にget_id_val関数をセット
+add_shortcode('id', 'get_id_val');
+
+function custom_rewrite_basic() {
+  add_rewrite_rule('blogee/([0-9]+)/?', '/blogee/?page_id=$matches[1]', 'top');
+}
+add_action('init', 'custom_rewrite_basic');
+
+function show_recentEntry() {
+    global $post;
+
+    $val = (isset($_GET['key']) && $_GET['key'] != '') ? $_GET["key"] : '';
+    $val = htmlspecialchars($val, ENT_QUOTES);
+
+    $target_post = "";
+
+    $output = "<dl>\n";
+
+    $lists = get_posts( array(
+        'posts_per_page' => 10,
+        'post__not_in' => array($val)
+      )
+    );
+
+    foreach( $lists as $post ){
+        // $output .= "<dt>".get_the_date()."</dt>\n<dd><a href=\"".get_the_permalink()."\">".get_the_title()."</a></dd>\n";
+        // $output .= "<dt>".get_the_date()."</dt>\n<dd><a href=\"".get_the_permalink()."\">".get_the_title()."</a></dd>\n";
+        $url = get_the_permalink();
+        $output .= "<dt>".get_the_date()."</dt>\n<dd>".do_shortcode("[blogcard url=$url]")."</dd>\n";
+        // $output .= "<dt>".get_the_date()."</dt>\n<dd>".do_shortcode("[sanko href=$aa title='松下' site='apple']")."</dd>\n";
+    }
+
+    $output = $target_post.$output."</dl>\n";
+
+    return $output;
+}
+add_shortcode('entryList', 'show_recentEntry');
 /* ------------------------------その他の設定------------------------------ */
   /*********************
    テーマのアップデートチェック
