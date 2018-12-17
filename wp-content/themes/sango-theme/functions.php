@@ -362,8 +362,12 @@ function show_recentEntry() {
     $val = (isset($_GET['key']) && $_GET['key'] != '') ? $_GET["key"] : '';
     $val = htmlspecialchars($val, ENT_QUOTES);
 
-    $target_url = "http://blogee.info/?p=$val";
-    $target_post = do_shortcode("[blogcard url=$target_url]");
+    if ( $val == '' ) {
+      $target_post = '';
+    } else {
+      $target_url = "http://blogee.info/?p=$val";
+      $target_post = do_shortcode("[blogcard url=$target_url]");
+    }
 
     $output = "<dl>\n";
 
@@ -374,11 +378,8 @@ function show_recentEntry() {
     );
 
     foreach( $lists as $post ){
-        // $output .= "<dt>".get_the_date()."</dt>\n<dd><a href=\"".get_the_permalink()."\">".get_the_title()."</a></dd>\n";
-        // $output .= "<dt>".get_the_date()."</dt>\n<dd><a href=\"".get_the_permalink()."\">".get_the_title()."</a></dd>\n";
         $url = get_the_permalink();
         $output .= "<dt>".get_the_date()."</dt>\n<dd>".do_shortcode("[blogcard url=$url]")."</dd>\n";
-        // $output .= "<dt>".get_the_date()."</dt>\n<dd>".do_shortcode("[sanko href=$aa title='松下' site='apple']")."</dd>\n";
     }
 
     $output = $target_post.$output."</dl>\n";
