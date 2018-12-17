@@ -362,7 +362,8 @@ function show_recentEntry() {
     $val = (isset($_GET['key']) && $_GET['key'] != '') ? $_GET["key"] : '';
     $val = htmlspecialchars($val, ENT_QUOTES);
 
-    $target_post = "";
+    $target_url = "http://blogee.info/?p=$val";
+    $target_post = do_shortcode("[blogcard url=$target_url]");
 
     $output = "<dl>\n";
 
